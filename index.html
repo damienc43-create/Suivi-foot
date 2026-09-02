@@ -1,0 +1,1239 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Suivi U12/U13</title>
+<meta name="description" content="Fiches joueurs U12/U13 — évaluations partagées entre éducateurs">
+<meta name="theme-color" content="#2E6B3E">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Suivi U12/U13">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+  *{box-sizing:border-box;} html,body{margin:0;padding:0;}
+  [hidden]{display:none!important;} img{max-width:100%;}
+  :root{
+    --bg:#F4F2EA;
+    --surface:#FFFFFF;
+    --surface-2:#EEEBDF;
+    --ink:#182018;
+    --muted:#66715F;
+    --line:rgba(24,32,24,0.12);
+    --accent:#2E6B3E;
+    --accent-soft:#E4EEE1;
+    --accent-ink:#FFFFFF;
+    --lvl1:#B84A3B;
+    --lvl1-soft:#F5E1DC;
+    --lvl2:#B9822C;
+    --lvl2-soft:#F3E6D2;
+    --lvl3:#748A2E;
+    --lvl3-soft:#E7ECD3;
+    --lvl4:#2E6B3E;
+    --lvl4-soft:#DCEBDF;
+    --p-rentree:#7C8B79;
+    --p-mi:#B9822C;
+    --p-fin:#2E6B3E;
+    --shadow:0 10px 30px rgba(20,30,20,0.14);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#10160F;
+      --surface:#182018;
+      --surface-2:#1F2A1E;
+      --ink:#E9EDE3;
+      --muted:#96A38C;
+      --line:rgba(233,237,227,0.14);
+      --accent:#6FCB84;
+      --accent-soft:#213A26;
+      --accent-ink:#0C1710;
+      --lvl1:#E08370;
+      --lvl1-soft:#3A211D;
+      --lvl2:#E0B15D;
+      --lvl2-soft:#3A311D;
+      --lvl3:#B7CF6E;
+      --lvl3-soft:#2C3320;
+      --lvl4:#6FCB84;
+      --lvl4-soft:#1E3324;
+      --p-rentree:#8B9A87;
+      --p-mi:#E0B15D;
+      --p-fin:#6FCB84;
+      --shadow:0 10px 34px rgba(0,0,0,0.45);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#10160F;
+    --surface:#182018;
+    --surface-2:#1F2A1E;
+    --ink:#E9EDE3;
+    --muted:#96A38C;
+    --line:rgba(233,237,227,0.14);
+    --accent:#6FCB84;
+    --accent-soft:#213A26;
+    --accent-ink:#0C1710;
+    --lvl1:#E08370;
+    --lvl1-soft:#3A211D;
+    --lvl2:#E0B15D;
+    --lvl2-soft:#3A311D;
+    --lvl3:#B7CF6E;
+    --lvl3-soft:#2C3320;
+    --lvl4:#6FCB84;
+    --lvl4-soft:#1E3324;
+    --p-rentree:#8B9A87;
+    --p-mi:#E0B15D;
+    --p-fin:#6FCB84;
+    --shadow:0 10px 34px rgba(0,0,0,0.45);
+  }
+
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{background:var(--bg);}
+  body{
+    font-family:"IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    color:var(--ink);
+    background:var(--bg);
+    font-variant-numeric: tabular-nums;
+  }
+  .display{font-family:"Barlow Condensed", ui-sans-serif, system-ui, sans-serif;}
+  button, input, textarea, select{font-family:inherit; color:inherit;}
+  button{cursor:pointer;}
+
+  .shell{
+    max-width:480px;
+    margin:0 auto;
+    height:100vh;
+    background:var(--surface);
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+  @media (min-width:560px){
+    body{padding:20px 0;}
+    .shell{height:calc(100vh - 40px); border-radius:28px; box-shadow:var(--shadow); border:1px solid var(--line);}
+  }
+
+  /* ---- topbar ---- */
+  .topbar{
+    position:sticky; top:0; z-index:5;
+    background:var(--surface);
+    border-bottom:1px solid var(--line);
+    padding:16px 18px 12px;
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+  }
+  .brand{display:flex; align-items:center; gap:10px;}
+  .brand-mark{width:34px;height:34px;border-radius:10px;background:var(--accent);display:flex;align-items:center;justify-content:center;flex:none;}
+  .brand-mark svg{width:19px;height:19px;}
+  .brand-text h1{font-size:21px; line-height:1.1; margin:0; font-weight:700; letter-spacing:.01em;}
+  .brand-text p{margin:1px 0 0; font-size:12px; color:var(--muted);}
+  .icon-btn{
+    width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--surface-2);
+    display:flex;align-items:center;justify-content:center;flex:none;
+  }
+  .icon-btn svg{width:17px;height:17px;}
+
+  main{flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch;}
+  .screen{padding:14px 18px 28px;}
+
+  /* ---- search + filters ---- */
+  .search{
+    display:flex; align-items:center; gap:8px;
+    background:var(--surface-2); border:1px solid var(--line); border-radius:12px;
+    padding:9px 12px; margin:2px 0 12px;
+  }
+  .search svg{width:15px;height:15px;color:var(--muted); flex:none;}
+  .search input{flex:1; border:none; background:none; outline:none; font-size:15px; color:var(--ink);}
+  .search input::placeholder{color:var(--muted);}
+
+  .chiprow{display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;}
+  .chip{
+    border:1px solid var(--line); background:var(--surface); color:var(--muted);
+    border-radius:999px; padding:6px 14px; font-size:13px; font-weight:600;
+    font-family:"Barlow Condensed"; letter-spacing:.02em; text-transform:uppercase;
+  }
+  .chip.active{background:var(--accent); border-color:var(--accent); color:var(--accent-ink);}
+
+  /* ---- roster ---- */
+  .roster-list{display:flex; flex-direction:column; gap:8px;}
+  .player-row{
+    display:flex; align-items:center; gap:12px;
+    background:var(--surface); border:1px solid var(--line); border-radius:14px;
+    padding:10px 12px; text-align:left; width:100%;
+  }
+  .avatar{
+    width:42px;height:42px;border-radius:50%;flex:none;
+    background:var(--surface-2); color:var(--accent);
+    display:flex;align-items:center;justify-content:center;
+    font-family:"Barlow Condensed"; font-weight:700; font-size:16px;
+    border:1px solid var(--line);
+  }
+  .player-main{flex:1; min-width:0;}
+  .player-name{font-size:15.5px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .player-sub{font-size:12.5px; color:var(--muted); margin-top:1px; display:flex; gap:6px; align-items:center;}
+  .cat-tag{
+    border:1px solid var(--line); border-radius:6px; padding:1px 6px; font-size:11px;
+    font-family:"Barlow Condensed"; font-weight:600; letter-spacing:.03em; color:var(--muted);
+  }
+  .avg-pill{
+    flex:none; min-width:44px; text-align:center; border-radius:10px; padding:6px 8px;
+    font-family:"Barlow Condensed"; font-weight:700; font-size:16px;
+  }
+  .avg-pill.empty{background:var(--surface-2); color:var(--muted); font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.02em; padding:8px 8px;}
+  .chev{color:var(--muted); flex:none;}
+  .chev svg{width:14px;height:14px;}
+
+  .empty-state{padding:40px 10px; text-align:center; color:var(--muted); font-size:14px;}
+
+  /* ---- fab ---- */
+  .fab{
+    position:absolute; right:18px; bottom:86px; z-index:6;
+    width:52px;height:52px;border-radius:50%; background:var(--accent); color:var(--accent-ink);
+    border:none; box-shadow:var(--shadow); display:flex; align-items:center; justify-content:center;
+  }
+  .fab svg{width:22px;height:22px;}
+
+  /* ---- tabbar ---- */
+  .tabbar{
+    position:sticky; bottom:0; z-index:5;
+    display:grid; grid-template-columns:1fr 1fr;
+    background:var(--surface); border-top:1px solid var(--line);
+    padding-bottom:env(safe-area-inset-bottom, 0);
+  }
+  .tab{
+    display:flex; flex-direction:column; align-items:center; gap:3px;
+    padding:9px 0 8px; background:none; border:none; color:var(--muted);
+  }
+  .tab svg{width:20px;height:20px;}
+  .tab span{font-family:"Barlow Condensed"; font-size:11.5px; font-weight:600; letter-spacing:.03em; text-transform:uppercase;}
+  .tab.active{color:var(--accent);}
+
+  /* ---- player detail overlay ---- */
+  .overlay{
+    position:absolute; inset:0; background:var(--bg); z-index:20;
+    display:flex; flex-direction:column;
+    transform:translateX(100%); transition:transform .3s cubic-bezier(.32,.72,0,1);
+  }
+  .overlay.open{transform:translateX(0);}
+  .overlay-head{
+    position:sticky; top:0; background:var(--surface); border-bottom:1px solid var(--line);
+    padding:14px 16px 12px; display:flex; align-items:flex-start; gap:10px; z-index:2;
+  }
+  .back-btn{
+    width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--surface-2);
+    display:flex;align-items:center;justify-content:center;flex:none; margin-top:1px;
+  }
+  .back-btn svg{width:16px;height:16px;}
+  .oh-title{flex:1; min-width:0;}
+  .oh-title h2{margin:0; font-size:19px; font-weight:700; line-height:1.15;}
+  .oh-meta{display:flex; gap:6px; margin-top:5px; flex-wrap:wrap;}
+  .archived-tag{background:var(--lvl1-soft); color:var(--lvl1); border-radius:6px; padding:1px 6px; font-size:11px; font-family:"Barlow Condensed"; font-weight:700; letter-spacing:.03em; text-transform:uppercase;}
+
+  .kebab-btn{
+    width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--surface-2);
+    display:flex;align-items:center;justify-content:center;flex:none; margin-top:1px; font-size:18px; font-weight:700; color:var(--muted); line-height:1;
+  }
+
+  .main-tabs{
+    display:grid; grid-template-columns:1fr 1fr; gap:4px;
+    background:var(--surface-2); border-radius:12px; padding:4px; margin-bottom:14px;
+  }
+  .main-tab{
+    border:none; background:none; padding:9px 4px; border-radius:9px;
+    font-family:"Barlow Condensed"; font-weight:700; font-size:13.5px; color:var(--muted); letter-spacing:.02em; text-transform:uppercase;
+  }
+  .main-tab.active{background:var(--surface); color:var(--accent); box-shadow:0 1px 3px rgba(0,0,0,.1);}
+
+  .radar-card{background:var(--surface-2); border-radius:14px; padding:14px; margin-bottom:14px;}
+  .radar-legend{display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-top:6px;}
+  .radar-legend div{display:flex; align-items:center; gap:5px; font-size:12px; color:var(--muted); font-weight:600;}
+  .radar-legend span.dot{width:9px;height:9px;border-radius:50%; flex:none;}
+  .radar-empty{text-align:center; color:var(--muted); font-size:13px; padding:30px 10px;}
+
+  .history-row{
+    display:flex; align-items:center; gap:10px; background:var(--surface); border:1px solid var(--line);
+    border-radius:12px; padding:10px 12px; margin-bottom:8px; text-align:left; width:100%;
+  }
+  .history-row .hr-period{font-family:"Barlow Condensed"; font-weight:700; font-size:14.5px; width:82px; flex:none;}
+  .history-row .hr-comment{flex:1; min-width:0; font-size:12.5px; color:var(--muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .history-row .hr-avg{flex:none; font-family:"Barlow Condensed"; font-weight:700; font-size:15px;}
+
+  .poste-edit-row{display:flex; flex-wrap:wrap; gap:7px; margin:6px 0 2px;}
+  .poste-edit-chip{
+    border:1px solid var(--line); background:var(--surface); border-radius:999px; padding:5px 11px;
+    font-size:12px; font-family:"Barlow Condensed"; font-weight:600; letter-spacing:.01em; color:var(--muted);
+  }
+  .poste-edit-chip.st-possible{background:var(--lvl2-soft); color:var(--lvl2); border-color:transparent;}
+  .poste-edit-chip.st-encours{background:var(--lvl2-soft); color:var(--lvl2); border-color:transparent;}
+  .poste-edit-chip.st-acquis{background:var(--lvl4-soft); color:var(--lvl4); border-color:transparent;}
+
+  .action-sheet-item{
+    width:100%; text-align:left; padding:13px 4px; border:none; background:none; font-size:15px; font-weight:600;
+    border-bottom:1px solid var(--line); color:var(--ink);
+  }
+  .action-sheet-item:last-child{border-bottom:none;}
+  .action-sheet-item.danger{color:var(--lvl1);}
+  .action-sheet-item.muted{color:var(--muted); font-weight:500; font-size:13px;}
+
+  .archive-link{
+    display:block; text-align:center; padding:14px 0 4px; font-size:13px; color:var(--muted);
+    background:none; border:none; width:100%; font-weight:600; text-decoration:underline;
+  }
+  .archived-banner{
+    display:flex; align-items:center; justify-content:space-between; background:var(--lvl1-soft); color:var(--lvl1);
+    border-radius:10px; padding:8px 12px; margin-bottom:12px; font-size:12.5px; font-weight:600;
+  }
+  .archived-banner button{background:none;border:none;color:var(--lvl1);font-weight:700;text-decoration:underline;font-size:12.5px;}
+
+  .poste-chip{
+    border-radius:999px; padding:3px 9px; font-size:11px; font-family:"Barlow Condensed";
+    font-weight:600; letter-spacing:.02em; border:1px solid var(--line); color:var(--muted);
+  }
+  .poste-chip.acquis{background:var(--lvl4-soft); color:var(--lvl4); border-color:transparent;}
+  .poste-chip.encours{background:var(--lvl2-soft); color:var(--lvl2); border-color:transparent;}
+
+  .overlay-body{flex:1; overflow-y:auto; padding:14px 16px 32px;}
+
+  .period-tabs{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:4px;
+    background:var(--surface-2); border-radius:12px; padding:4px; margin-bottom:14px;
+  }
+  .period-tab{
+    border:none; background:none; padding:8px 4px; border-radius:9px;
+    font-family:"Barlow Condensed"; font-weight:600; font-size:13px; color:var(--muted); letter-spacing:.01em;
+  }
+  .period-tab.active{background:var(--surface); color:var(--ink); box-shadow:0 1px 3px rgba(0,0,0,.1);}
+
+  .avg-card{
+    display:flex; align-items:center; justify-content:space-between;
+    background:var(--surface-2); border-radius:14px; padding:14px 16px; margin-bottom:16px;
+  }
+  .avg-card-label{font-size:12.5px; color:var(--muted); font-weight:500;}
+  .avg-card-hint{font-size:11.5px; color:var(--muted); margin-top:2px;}
+  .avg-big{font-family:"Barlow Condensed"; font-weight:700; font-size:36px; line-height:1;}
+  .avg-big span{font-size:17px; color:var(--muted); font-weight:600;}
+
+  .group-title{
+    font-family:"Barlow Condensed"; text-transform:uppercase; letter-spacing:.06em; font-size:12.5px;
+    color:var(--muted); font-weight:700; margin:18px 0 8px; padding-left:2px;
+    border-left:3px solid var(--accent); padding-left:8px;
+  }
+  .group-title:first-child{margin-top:0;}
+
+  .crit-card{background:var(--surface); border:1px solid var(--line); border-radius:13px; padding:11px 12px; margin-bottom:8px;}
+  .crit-top{display:flex; align-items:center; justify-content:space-between; gap:8px;}
+  .crit-name{font-size:14.5px; font-weight:600;}
+  .info-btn{
+    width:22px;height:22px;border-radius:50%; border:1px solid var(--line); background:var(--surface-2);
+    color:var(--muted); font-size:12px; font-weight:700; font-family:"Barlow Condensed"; flex:none;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .info-btn.on{background:var(--accent); border-color:var(--accent); color:var(--accent-ink);}
+
+  .lvl-row{display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin-top:9px;}
+  .lvl-btn{
+    border:1px solid var(--line); background:var(--surface); border-radius:9px; padding:7px 0;
+    font-family:"Barlow Condensed"; font-weight:700; font-size:15px; color:var(--muted); text-align:center;
+  }
+  .lvl-btn.l1.sel{background:var(--lvl1-soft); border-color:var(--lvl1); color:var(--lvl1);}
+  .lvl-btn.l2.sel{background:var(--lvl2-soft); border-color:var(--lvl2); color:var(--lvl2);}
+  .lvl-btn.l3.sel{background:var(--lvl3-soft); border-color:var(--lvl3); color:var(--lvl3);}
+  .lvl-btn.l4.sel{background:var(--lvl4-soft); border-color:var(--lvl4); color:var(--lvl4);}
+
+  .crit-desc{font-size:12.5px; color:var(--muted); margin-top:8px; line-height:1.45;}
+  .crit-desc b{color:var(--ink);}
+  .crit-levels{margin-top:6px; display:flex; flex-direction:column; gap:3px;}
+  .crit-levels div{font-size:12px; color:var(--muted); display:flex; gap:6px;}
+  .crit-levels div b{flex:none; width:14px; color:var(--ink);}
+  .crit-levels div.cur{color:var(--ink); font-weight:600;}
+
+  .comment-card{background:var(--surface); border:1px solid var(--line); border-radius:13px; padding:12px; margin-top:16px;}
+  .comment-card label{font-size:12.5px; font-weight:600; color:var(--muted); display:block; margin-bottom:6px;}
+  .comment-card textarea{
+    width:100%; min-height:70px; border:none; outline:none; background:none; resize:vertical;
+    font-size:14.5px; line-height:1.4; color:var(--ink);
+  }
+
+  .meta-foot{margin-top:16px; display:flex; flex-direction:column; gap:8px;}
+  .meta-line{font-size:11.5px; color:var(--muted);}
+  .evalfield{
+    display:flex; align-items:center; gap:8px; background:var(--surface-2); border-radius:10px; padding:7px 10px;
+  }
+  .evalfield label{font-size:12px; color:var(--muted); flex:none;}
+  .evalfield input{flex:1; border:none; background:none; outline:none; font-size:13.5px;}
+
+  /* ---- reperes screen ---- */
+  .rule-note{font-size:13px; color:var(--muted); line-height:1.5; margin-bottom:16px;}
+  .rule-note b{color:var(--ink);}
+  .ref-card{background:var(--surface); border:1px solid var(--line); border-radius:13px; padding:12px 13px; margin-bottom:9px;}
+  .ref-card h3{margin:0 0 4px; font-size:15px; font-weight:600;}
+  .ref-card .how{font-size:12px; color:var(--muted); line-height:1.4; margin-bottom:8px;}
+  .ref-levels{display:grid; grid-template-columns:1fr; gap:4px;}
+  .ref-levels div{font-size:12.5px; display:flex; gap:6px;}
+  .ref-levels div b{flex:none; width:60px; font-family:"Barlow Condensed"; font-weight:700;}
+  .ref-levels div.rl1 b{color:var(--lvl1);}
+  .ref-levels div.rl2 b{color:var(--lvl2);}
+  .ref-levels div.rl3 b{color:var(--lvl3);}
+  .ref-levels div.rl4 b{color:var(--lvl4);}
+
+  .age-table-wrap{overflow-x:auto; border:1px solid var(--line); border-radius:13px; margin:10px 0 20px;}
+  table.age-table{border-collapse:collapse; width:100%; font-size:12px;}
+  table.age-table th, table.age-table td{padding:7px 9px; border-bottom:1px solid var(--line); white-space:nowrap; text-align:left;}
+  table.age-table th{font-family:"Barlow Condensed"; font-weight:700; color:var(--muted); font-size:11.5px; text-transform:uppercase; letter-spacing:.02em; background:var(--surface-2); position:sticky; top:0;}
+  table.age-table td.crit-col, table.age-table th.crit-col{position:sticky; left:0; background:var(--surface); font-weight:600; z-index:1;}
+  table.age-table th.crit-col{background:var(--surface-2);}
+  table.age-table td.hl, table.age-table th.hl{background:var(--accent-soft); color:var(--accent); font-weight:700;}
+
+  /* ---- toast ---- */
+  .toast{
+    position:absolute; left:50%; bottom:78px; transform:translateX(-50%) translateY(10px);
+    background:var(--ink); color:var(--bg); padding:8px 16px; border-radius:999px; font-size:13px; font-weight:600;
+    opacity:0; pointer-events:none; transition:opacity .2s, transform .2s; z-index:40;
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+  /* ---- modal (add player) ---- */
+  .modal-backdrop{
+    position:absolute; inset:0; background:rgba(10,14,10,0.42); z-index:50;
+    display:flex; align-items:flex-end; opacity:0; pointer-events:none; transition:opacity .18s;
+  }
+  .modal-backdrop.show{opacity:1; pointer-events:auto;}
+  .modal-sheet{
+    background:var(--surface); width:100%; border-radius:20px 20px 0 0; padding:18px 18px 24px;
+    transform:translateY(100%); transition:transform .22s cubic-bezier(.32,.72,0,1);
+    max-height:85vh; overflow-y:auto;
+  }
+  .modal-backdrop.show .modal-sheet{transform:translateY(0);}
+  .modal-sheet h3{margin:0 0 14px; font-size:17px; font-weight:700;}
+  .field{margin-bottom:10px;}
+  .field label{display:block; font-size:12px; color:var(--muted); margin-bottom:4px; font-weight:600;}
+  .field input, .field select{
+    width:100%; border:1px solid var(--line); background:var(--surface-2); border-radius:10px;
+    padding:9px 11px; font-size:14.5px; outline:none;
+  }
+  .modal-actions{display:flex; gap:10px; margin-top:14px;}
+  .btn{flex:1; border-radius:10px; padding:11px; font-weight:600; font-size:14.5px; border:1px solid var(--line); background:var(--surface-2);}
+  .btn.primary{background:var(--accent); color:var(--accent-ink); border-color:var(--accent);}
+
+  @media (prefers-reduced-motion: reduce){
+    .overlay, .modal-backdrop, .modal-sheet, .toast{transition:none;}
+  }
+</style>
+</head>
+<body>
+
+<div class="shell" id="shell">
+
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 2 3 8.5 6.2 19h11.6L21 8.5 12 2Z" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/><path d="M12 7.2 8.6 9.7l1.3 4h4.2l1.3-4L12 7.2Z" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="brand-text">
+        <h1 class="display">Suivi U12/U13</h1>
+        <p>Évaluations joueurs &middot; saison 2026/2027</p>
+      </div>
+    </div>
+    <button class="icon-btn" id="btn-settings" title="Votre nom d'évaluateur">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.4" stroke="currentColor" stroke-width="1.6"/><path d="M4.5 20c1.4-3.6 4.3-5.4 7.5-5.4s6.1 1.8 7.5 5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+
+  <main>
+    <!-- ROSTER -->
+    <section class="screen" id="view-roster">
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="1.7"/><path d="M20 20l-3.8-3.8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        <input id="search-input" type="text" placeholder="Chercher un joueur...">
+      </div>
+      <div class="chiprow" id="cat-filters">
+        <button class="chip active" data-cat="tous">Tous</button>
+        <button class="chip" data-cat="U12">U12</button>
+        <button class="chip" data-cat="U13">U13</button>
+      </div>
+      <div class="roster-list" id="roster-list"></div>
+      <button class="archive-link" id="archive-toggle-link" hidden></button>
+    </section>
+
+    <!-- REPERES -->
+    <section class="screen" id="view-reperes" hidden>
+      <p class="rule-note">Chaque critère se note de <b>1 à 4</b>&nbsp;: 1 = à travailler, 2 = en progrès, 3 = acquis, 4 = maîtrisé. Objectif&nbsp;: évaluer chaque joueur 3 fois dans la saison (rentrée / mi-saison / fin de saison) pour suivre sa progression.</p>
+      <div id="ref-groups"></div>
+      <div class="group-title" style="margin-top:22px;">Repères par âge (U6 à U15)</div>
+      <p class="rule-note" style="margin-top:6px;">Repères indicatifs de calibrage, pas des normes officielles. Les colonnes U12/U13 sont en évidence.</p>
+      <div class="age-table-wrap"><table class="age-table" id="age-table"></table></div>
+    </section>
+  </main>
+
+  <div class="tabbar">
+    <button class="tab active" data-view="roster">
+      <svg viewBox="0 0 24 24" fill="none"><rect x="3.5" y="4.5" width="17" height="4.2" rx="1.2" stroke="currentColor" stroke-width="1.6"/><rect x="3.5" y="10.9" width="17" height="4.2" rx="1.2" stroke="currentColor" stroke-width="1.6"/><rect x="3.5" y="17.3" width="17" height="2.4" rx="1.2" stroke="currentColor" stroke-width="1.6"/></svg>
+      <span>Joueurs</span>
+    </button>
+    <button class="tab" data-view="reperes">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M4 5.2c2.8-1.1 5.6-1.1 8 0 2.4-1.1 5.2-1.1 8 0v13.6c-2.8-1.1-5.6-1.1-8 0-2.4-1.1-5.2-1.1-8 0V5.2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M12 5.2v13.6" stroke="currentColor" stroke-width="1.5"/></svg>
+      <span>Repères</span>
+    </button>
+  </div>
+
+  <button class="fab" id="fab-add" title="Ajouter un joueur">
+    <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+  </button>
+
+  <!-- PLAYER DETAIL OVERLAY -->
+  <div class="overlay" id="overlay">
+    <div class="overlay-head">
+      <button class="back-btn" id="btn-back">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M15 5 8 12l7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="oh-title">
+        <h2 class="display" id="oh-name">—</h2>
+        <div class="oh-meta" id="oh-meta"></div>
+      </div>
+      <button class="kebab-btn" id="btn-kebab">⋮</button>
+    </div>
+    <div class="overlay-body" id="overlay-body"></div>
+  </div>
+
+  <!-- ADD / EDIT PLAYER MODAL -->
+  <div class="modal-backdrop" id="modal-backdrop">
+    <div class="modal-sheet">
+      <h3 id="np-title">Ajouter un joueur</h3>
+      <div class="field"><label>Nom</label><input id="np-nom" type="text" placeholder="ex. Dupont"></div>
+      <div class="field"><label>Prénom</label><input id="np-prenom" type="text" placeholder="ex. Léo"></div>
+      <div class="field"><label>Catégorie</label>
+        <select id="np-cat"><option value="U12">U12</option><option value="U13">U13</option></select>
+      </div>
+      <div class="field">
+        <label>Postes (facultatif — appuie pour changer le niveau)</label>
+        <div class="poste-edit-row" id="np-postes"></div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn" id="np-cancel">Annuler</button>
+        <button class="btn primary" id="np-save">Ajouter</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PLAYER ACTIONS SHEET -->
+  <div class="modal-backdrop" id="actions-backdrop">
+    <div class="modal-sheet" id="actions-sheet"></div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script>
+/* ==================================================================
+   🔧 CONFIGURATION FIREBASE — À REMPLIR
+   Firebase console > ⚙️ Paramètres du projet > Vos applications >
+   application Web > objet firebaseConfig. Colle tes vraies valeurs
+   ci-dessous (remplace tout entre les guillemets).
+   ================================================================== */
+const firebaseConfig = {
+  apiKey: "AIzaSyBE-_95ILV3ui3QGEUMtcNp8tDJWp4CP10",
+  authDomain: "suivi-foot.firebaseapp.com",
+  projectId: "suivi-foot",
+  storageBucket: "suivi-foot.firebasestorage.app",
+  messagingSenderId: "894454658648",
+  appId: "1:894454658648:web:8aab76fdb291b55712bc2d"
+};
+/* ================================================================== */
+
+const DATA ={"grille": [{"key": "jonglerie", "categorie": "Technique", "critere": "Jonglerie", "comment": "Nombre de contacts consécutifs sans faire tomber le ballon (pied/cuisse/tête). 3 essais, garder le meilleur.", "niveaux": ["0-2 contacts", "3-9 contacts", "10-24 contacts", "25 contacts et plus"]}, {"key": "passesPrecises", "categorie": "Technique", "critere": "Passes précises", "comment": "10 passes à 10 m sur une cible (plot, joueur, petit but) : compter les passes réussies.", "niveaux": ["0-3 / 10", "4-6 / 10", "7-8 / 10", "9-10 / 10"]}, {"key": "conduiteBalle", "categorie": "Technique", "critere": "Conduite de balle (slalom)", "comment": "Slalom entre 5 plots espacés d'1 m, aller-retour, des deux pieds.", "niveaux": ["Perd le ballon, très irrégulier", "Régulier mais lent", "Fluide", "Fluide et rapide"]}, {"key": "tirsCadres", "categorie": "Technique", "critere": "Tirs cadrés", "comment": "10 tirs depuis l'entrée de la surface : compter les tirs cadrés (ou marqués).", "niveaux": ["0-2 / 10", "3-5 / 10", "6-8 / 10", "9-10 / 10"]}, {"key": "placementDecision", "categorie": "Tactique", "critere": "Placement & décision", "comment": "Observé en jeu réduit ou match : le joueur se place-t-il pour aider ses partenaires, choisit-il vite entre passe/dribble/tir ?", "niveaux": ["Souvent hors du jeu, décisions au hasard", "Se place parfois bien, hésite", "Bon placement, décisions cohérentes", "Anticipe, décide vite et juste"]}, {"key": "communication", "categorie": "Tactique", "critere": "Communication", "comment": "Le joueur parle-t-il à ses partenaires (appels, alertes, encouragements) ?", "niveaux": ["Silencieux", "Communique rarement", "Communique régulièrement", "Leader vocal positif"]}, {"key": "vitesse20m", "categorie": "Physique", "critere": "Vitesse 20 m", "comment": "Sprint chronométré sur 20 m, départ arrêté (repère indicatif à calibrer selon le groupe).", "niveaux": ["Plus de 4,5 s", "4,0 à 4,5 s", "3,6 à 4,0 s", "Moins de 3,6 s"]}, {"key": "coordination", "categorie": "Physique", "critere": "Coordination", "comment": "Petit parcours (pas chassés, montées de genoux, changement de direction sur plots), observé qualitativement.", "niveaux": ["Déplacements raides, déséquilibres", "Correct mais peu fluide", "Fluide et coordonné", "Très fluide, aisance remarquable"]}, {"key": "endurance", "categorie": "Physique", "critere": "Endurance (test Luc Léger)", "comment": "Course navette 20 m sur bande sonore à paliers d'1 min (palier 1 = 8 km/h, +0,5 km/h par palier). Le joueur s'arrête dès qu'il ne peut plus suivre le rythme 2 fois de suite : noter le dernier palier atteint (repère indicatif, VMA moyenne d'un jeune footballeur U12/U13 ≈ palier 9-10, soit 12-12,5 km/h).", "niveaux": ["Palier 6 ou moins", "Palier 7 à 8", "Palier 9 à 10", "Palier 11 et plus"]}, {"key": "assiduite", "categorie": "Comportement", "critere": "Assiduité & attitude", "comment": "Ponctualité, écoute des consignes, esprit d'équipe, envie de progresser.", "niveaux": ["Attitude à travailler", "Correcte mais irrégulière", "Bonne attitude régulière", "Exemplaire, moteur pour le groupe"]}], "reperes": [{"key": "jonglerie", "test": "Jonglerie", "ages": {"U6": "0-1 contact", "U7": "1-3 contacts", "U8": "3-5 contacts", "U9": "5-8 contacts", "U10": "8-12 contacts", "U11": "10-16 contacts", "U12": "12-20 contacts", "U13": "16-24 contacts", "U14": "20-30 contacts"}}, {"key": "passesPrecises", "test": "Passes précises", "ages": {"U6": "1-2 / 10", "U7": "2-3 / 10", "U8": "3-4 / 10", "U9": "4-5 / 10", "U10": "5-6 / 10", "U11": "6-7 / 10", "U12": "6-7 / 10", "U13": "7-8 / 10", "U14": "7-8 / 10"}}, {"key": "conduiteBalle", "test": "Conduite de balle (slalom)", "ages": {"U6": "Découverte, appuis simples", "U7": "Basique, hésitante", "U8": "Régulière mais lente", "U9": "Régulière", "U10": "Assez fluide", "U11": "Fluide", "U12": "Fluide", "U13": "Fluide et rapide", "U14": "Fluide et rapide"}}, {"key": "tirsCadres", "test": "Tirs cadrés", "ages": {"U6": "0-1 / 10", "U7": "1-2 / 10", "U8": "2-3 / 10", "U9": "3-4 / 10", "U10": "4-5 / 10", "U11": "5-6 / 10", "U12": "5-6 / 10", "U13": "6-8 / 10", "U14": "6-8 / 10"}}, {"key": "placementDecision", "test": "Placement & décision", "ages": {"U6": "Suit le ballon", "U7": "1ers repères de placement", "U8": "Se place parfois", "U9": "Se place, hésite", "U10": "Placement correct", "U11": "Bon placement", "U12": "Bon placement, décisions cohérentes", "U13": "Bon placement, décisions cohérentes", "U14": "Anticipe"}}, {"key": "communication", "test": "Communication", "ages": {"U6": "Silencieux", "U7": "Silencieux", "U8": "Communique rarement", "U9": "Communique rarement", "U10": "Communique parfois", "U11": "Communique régulièrement", "U12": "Communique régulièrement", "U13": "Communique régulièrement", "U14": "Leader vocal"}}, {"key": "vitesse20m", "test": "Vitesse 20 m", "ages": {"U6": "5,0-5,5 s", "U7": "4,8-5,2 s", "U8": "4,6-5,0 s", "U9": "4,4-4,8 s", "U10": "4,2-4,6 s", "U11": "4,0-4,4 s", "U12": "3,8-4,2 s", "U13": "3,6-4,0 s", "U14": "3,4-3,8 s"}}, {"key": "coordination", "test": "Coordination", "ages": {"U6": "En construction", "U7": "En construction", "U8": "Correct mais peu fluide", "U9": "Correct mais peu fluide", "U10": "Fluide", "U11": "Fluide et coordonné", "U12": "Fluide et coordonné", "U13": "Fluide et coordonné", "U14": "Très fluide"}}, {"key": "endurance", "test": "Endurance (test Luc Léger)", "ages": {"U6": "Palier 2-3", "U7": "Palier 3-4", "U8": "Palier 4-5", "U9": "Palier 5-6", "U10": "Palier 6-7", "U11": "Palier 7-8", "U12": "Palier 8-9", "U13": "Palier 9-10", "U14": "Palier 10-11"}}, {"key": "assiduite", "test": "Assiduité & attitude", "ages": {"U6": "Découvre les consignes de groupe", "U7": "Découvre les consignes de groupe", "U8": "Respecte les consignes, avec rappels", "U9": "Respecte les consignes, avec rappels", "U10": "Bonne attitude, gagne en autonomie", "U11": "Bonne attitude régulière", "U12": "Bonne attitude régulière", "U13": "Bonne attitude régulière", "U14": "Exemplaire, moteur pour le groupe"}}], "players": [{"id": "cuoq-jonas", "nom": "Cuoq", "prenom": "Jonas", "nomComplet": "Cuoq Jonas", "categorie": "U13", "licence": true, "postes": {"defD": "Acquis", "defC": "En cours", "defG": "Possible", "milG": "Acquis", "milD": "En cours"}}, {"id": "dechazeron-emerick", "nom": "DECHAZERON", "prenom": "Emerick", "nomComplet": "DECHAZERON Emerick", "categorie": "U13", "licence": true, "postes": {"gar": "Acquis", "defC": "Possible", "milG": "Acquis", "milCD": "Acquis", "milCO": "Acquis", "milD": "Acquis", "att": "Acquis"}}, {"id": "dubois-guillaume", "nom": "Dubois", "prenom": "Guillaume", "nomComplet": "Dubois Guillaume", "categorie": "U13", "licence": true, "postes": {"defD": "Possible", "milD": "Acquis"}}, {"id": "gatty-hugo", "nom": "Gatty", "prenom": "Hugo", "nomComplet": "Gatty Hugo", "categorie": "U13", "licence": true, "postes": {"defD": "Possible", "defC": "Acquis", "defG": "Possible", "milCD": "En cours", "milCO": "Possible"}}, {"id": "gros-nathan", "nom": "GROS", "prenom": "Nathan", "nomComplet": "GROS Nathan", "categorie": "U13", "licence": true, "postes": {"gar": "Possible", "milG": "Acquis", "milCD": "Acquis", "milCO": "Acquis", "milD": "Acquis", "att": "Possible"}}, {"id": "guerin-nolhan", "nom": "Guerin", "prenom": "Nolhan", "nomComplet": "Guerin Nolhan", "categorie": "U13", "licence": true, "postes": {"gar": "En cours", "milG": "En cours", "milCO": "Possible", "milD": "Possible", "att": "En cours"}}, {"id": "martin-leandre", "nom": "MARTIN", "prenom": "Léandre", "nomComplet": "MARTIN Léandre", "categorie": "U13", "licence": false, "postes": {"defD": "En cours", "milG": "Possible", "milCD": "En cours", "milCO": "Acquis", "milD": "En cours", "att": "En cours"}}, {"id": "chazalet-loic", "nom": "Chazalet", "prenom": "Loic", "nomComplet": "Chazalet Loic", "categorie": "U13", "licence": false, "postes": {"gar": "Acquis", "defD": "En cours", "defC": "Acquis", "defG": "En cours", "milCD": "Acquis", "milCO": "Possible", "milD": "En cours"}}, {"id": "sauron-ewan", "nom": "Sauron", "prenom": "Ewan", "nomComplet": "Sauron Ewan", "categorie": "U13", "licence": true, "postes": {"defD": "Possible", "defG": "Possible", "milG": "En cours", "milD": "Acquis", "att": "En cours"}}, {"id": "crine-johan", "nom": "CRINE", "prenom": "Johan", "nomComplet": "CRINE Johan", "categorie": "U12", "licence": false, "postes": {"milD": "Possible", "att": "Acquis"}}, {"id": "desmaris-lalie", "nom": "Desmaris", "prenom": "Lalie", "nomComplet": "Desmaris Lalie", "categorie": "U12", "licence": true, "postes": {"defD": "Acquis", "defC": "En cours", "milG": "En cours", "milD": "En cours"}}, {"id": "laurent-louka", "nom": "LAURENT", "prenom": "Louka", "nomComplet": "LAURENT Louka", "categorie": "U12", "licence": true, "postes": {"milG": "En cours", "milCD": "Acquis", "milCO": "Acquis", "milD": "Acquis", "att": "Acquis"}}, {"id": "moulin-nathan", "nom": "MOULIN", "prenom": "Nathan", "nomComplet": "MOULIN Nathan", "categorie": "U12", "licence": true, "postes": {"defD": "Acquis", "defC": "Acquis", "defG": "Possible"}}, {"id": "moulin-maxime", "nom": "MOULIN", "prenom": "Maxime", "nomComplet": "MOULIN Maxime", "categorie": "U12", "licence": true, "postes": {"gar": "Possible", "milG": "Acquis", "milCD": "Acquis", "milCO": "Acquis", "milD": "Acquis", "att": "En cours"}}, {"id": "verhaeghe-gabriel", "nom": "VERHAEGHE", "prenom": "Gabriel", "nomComplet": "VERHAEGHE Gabriel", "categorie": "U12", "licence": true, "postes": {"gar": "En cours", "att": "Possible"}}, {"id": "vincent-maxime", "nom": "VINCENT", "prenom": "Maxime", "nomComplet": "VINCENT Maxime", "categorie": "U12", "licence": true, "postes": {"defD": "En cours", "defG": "Acquis", "milG": "Acquis", "milD": "Possible"}}, {"id": "vincent-thomas", "nom": "VINCENT", "prenom": "Thomas", "nomComplet": "VINCENT Thomas", "categorie": "U12", "licence": true, "postes": {"defD": "Acquis", "defC": "Acquis", "defG": "Acquis", "milG": "Possible", "milCD": "Acquis", "milD": "Possible"}}, {"id": "amraoui-kais", "nom": "Amraoui", "prenom": "Kais", "nomComplet": "Amraoui Kais", "categorie": "U12", "licence": false, "postes": {}}, {"id": "oudin-jean", "nom": "OUDIN", "prenom": "Jean", "nomComplet": "OUDIN Jean", "categorie": "U12", "licence": false, "postes": {}}, {"id": "planchon-mael", "nom": "PLANCHON", "prenom": "Maël", "nomComplet": "PLANCHON Maël", "categorie": "U12", "licence": false, "postes": {}}, {"id": "rohaut-mathias", "nom": "Rohaut", "prenom": "Mathias", "nomComplet": "Rohaut Mathias", "categorie": "U13", "licence": false, "postes": {}}, {"id": "boudot-dylan", "nom": "BOUDOT", "prenom": "Dylan", "nomComplet": "BOUDOT Dylan", "categorie": "U13", "licence": false, "postes": {}}, {"id": "crespe-theo", "nom": "Crespe", "prenom": "Theo", "nomComplet": "Crespe Theo", "categorie": "U13", "licence": false, "postes": {}}, {"id": "perrier-lowen", "nom": "PERRIER", "prenom": "Lowen", "nomComplet": "PERRIER Lowen", "categorie": "U13", "licence": false, "postes": {}}]};
+
+const POSTE_LABELS = {gar:"Gardien", defD:"Défenseur droit", defC:"Défenseur central", defG:"Défenseur gauche",
+  milG:"Milieu gauche", milCD:"Milieu déf. central", milCO:"Milieu off. central", milD:"Milieu droit", att:"Attaquant"};
+
+const GROUP_ORDER = ["Technique","Tactique","Physique","Comportement"];
+const GROUPS = GROUP_ORDER.map(cat => ({cat, criteres: DATA.grille.filter(g => g.categorie === cat)}));
+
+const PERIODS = [
+  {key:"rentree", label:"Rentrée"},
+  {key:"mi-saison", label:"Mi-saison"},
+  {key:"fin-saison", label:"Fin de saison"}
+];
+
+let db = null;
+let playersById = {};
+DATA.players.forEach(p => playersById[p.id] = p);
+let evalCache = {}; // docId -> data
+// seed empty eval cache so UI works before db/subscriptions resolve
+DATA.players.forEach(p => PERIODS.forEach(pd => {
+  const id = p.id + "__" + pd.key;
+  evalCache[id] = {playerId:p.id, periode:pd.label, scores:{}, commentaire:"", evaluateur:null, updatedAt:null};
+}));
+
+let state = {
+  view: "roster",
+  catFilter: "tous",
+  search: "",
+  currentPlayerId: null,
+  currentPeriod: PERIODS[0].key,
+  playerTab: "profil",
+  infoOpen: {},
+  showArchived: false,
+  editingPlayerId: null,
+  modalPostes: {}
+};
+
+const POSTE_STATES = [undefined, "Possible", "En cours", "Acquis"];
+function posteStateClass(v){
+  if(v === "Acquis") return "st-acquis";
+  if(v === "En cours") return "st-encours";
+  if(v === "Possible") return "st-possible";
+  return "";
+}
+
+const $ = sel => document.querySelector(sel);
+const $$ = sel => Array.from(document.querySelectorAll(sel));
+
+function slugify(s){
+  return s.normalize("NFKD").replace(/[̀-ͯ]/g,"").toLowerCase().trim().replace(/[^a-z0-9]+/g,"-").replace(/(^-|-$)/g,"");
+}
+
+function initials(nomComplet){
+  const parts = nomComplet.split(" ").filter(Boolean);
+  const a = parts[0] ? parts[0][0] : "";
+  const b = parts[1] ? parts[1][0] : "";
+  return (a+b).toUpperCase();
+}
+
+function avgOf(scores){
+  const vals = Object.values(scores||{}).filter(v => typeof v === "number");
+  if(!vals.length) return null;
+  return vals.reduce((a,b)=>a+b,0)/vals.length;
+}
+function bandOf(avg){
+  if(avg === null) return null;
+  return Math.min(4, Math.max(1, Math.round(avg)));
+}
+
+function latestEvalFor(playerId){
+  let best = null;
+  PERIODS.forEach(pd => {
+    const d = evalCache[playerId + "__" + pd.key];
+    if(!d) return;
+    const a = avgOf(d.scores);
+    if(a === null) return;
+    if(!best || (d.updatedAt||"") > (best.updatedAt||"")) best = {...d, avg:a};
+  });
+  return best;
+}
+
+function toast(msg){
+  const t = $("#toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toast._t);
+  toast._t = setTimeout(()=>t.classList.remove("show"), 1600);
+}
+
+/* ---------------- rendering: roster ---------------- */
+function renderRoster(){
+  const list = $("#roster-list");
+  const q = state.search.trim().toLowerCase();
+  const allPlayers = Object.values(playersById);
+  const archivedCount = allPlayers.filter(p => p.archived).length;
+
+  const link = $("#archive-toggle-link");
+  if(state.showArchived){
+    link.hidden = false;
+    link.textContent = "← Retour aux joueurs actifs";
+  } else if(archivedCount > 0){
+    link.hidden = false;
+    link.textContent = `Voir les joueurs archivés (${archivedCount})`;
+  } else {
+    link.hidden = true;
+  }
+
+  let players = allPlayers.filter(p => !!p.archived === state.showArchived)
+    .sort((a,b)=>a.nomComplet.localeCompare(b.nomComplet,'fr'));
+  if(state.catFilter !== "tous") players = players.filter(p => p.categorie === state.catFilter);
+  if(q) players = players.filter(p => p.nomComplet.toLowerCase().includes(q));
+
+  if(!players.length){
+    list.innerHTML = `<div class="empty-state">${state.showArchived ? "Aucun joueur archivé." : "Aucun joueur ne correspond."}</div>`;
+    return;
+  }
+
+  list.innerHTML = players.map(p => {
+    const latest = latestEvalFor(p.id);
+    let pillHtml;
+    if(latest){
+      const band = bandOf(latest.avg);
+      pillHtml = `<div class="avg-pill" style="background:var(--lvl${band}-soft); color:var(--lvl${band});">${latest.avg.toFixed(1)}</div>`;
+    } else {
+      pillHtml = `<div class="avg-pill empty">À noter</div>`;
+    }
+    return `<button class="player-row" data-id="${p.id}">
+      <div class="avatar">${initials(p.nomComplet)}</div>
+      <div class="player-main">
+        <div class="player-name">${p.nomComplet}</div>
+        <div class="player-sub"><span class="cat-tag">${p.categorie}</span>${latest ? '<span>'+latest.periode+'</span>' : '<span>Pas encore évalué</span>'}</div>
+      </div>
+      ${pillHtml}
+      <div class="chev"><svg viewBox="0 0 24 24" fill="none"><path d="m9 5 7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    </button>`;
+  }).join("");
+
+  $$("#roster-list .player-row").forEach(btn => btn.addEventListener("click", () => openPlayer(btn.dataset.id)));
+}
+
+/* ---------------- rendering: reperes ---------------- */
+function renderReperes(){
+  const wrap = $("#ref-groups");
+  wrap.innerHTML = GROUPS.map(g => {
+    const cards = g.criteres.map(c => `
+      <div class="ref-card">
+        <h3>${c.critere}</h3>
+        <div class="how">${c.comment}</div>
+        <div class="ref-levels">
+          <div class="rl1"><b>1</b><span>${c.niveaux[0]}</span></div>
+          <div class="rl2"><b>2</b><span>${c.niveaux[1]}</span></div>
+          <div class="rl3"><b>3</b><span>${c.niveaux[2]}</span></div>
+          <div class="rl4"><b>4</b><span>${c.niveaux[3]}</span></div>
+        </div>
+      </div>`).join("");
+    return `<div class="group-title">${g.cat}</div>${cards}`;
+  }).join("");
+
+  const ages = ["U6","U7","U8","U9","U10","U11","U12","U13","U14","U15"];
+  const table = $("#age-table");
+  let thead = "<thead><tr><th class=\"crit-col\">Test</th>" + ages.map(a => `<th class="${a==='U12'||a==='U13'?'hl':''}">${a}</th>`).join("") + "</tr></thead>";
+  let tbody = "<tbody>" + DATA.reperes.map(r => {
+    return "<tr><td class=\"crit-col\">"+r.test+"</td>" + ages.map(a => `<td class="${a==='U12'||a==='U13'?'hl':''}">${r.ages[a]||""}</td>`).join("") + "</tr>";
+  }).join("") + "</tbody>";
+  table.innerHTML = thead + tbody;
+}
+
+/* ---------------- radar chart ---------------- */
+const CRIT_SHORT = {
+  jonglerie:"Jongle", passesPrecises:"Passes", conduiteBalle:"Conduite", tirsCadres:"Tirs",
+  placementDecision:"Placement", communication:"Commu.", vitesse20m:"Vitesse",
+  coordination:"Coord.", endurance:"Endur.", assiduite:"Assidu."
+};
+const PERIOD_COLOR_VAR = {rentree:"--p-rentree", "mi-saison":"--p-mi", "fin-saison":"--p-fin"};
+
+function buildRadar(playerId){
+  const crits = DATA.grille;
+  const N = crits.length;
+  const size = 300, center = size/2, R = 104;
+  const angle = i => -Math.PI/2 + i*(2*Math.PI/N);
+  const pt = (i, r) => [center + r*Math.cos(angle(i)), center + r*Math.sin(angle(i))];
+
+  let rings = "";
+  for(let lvl=1; lvl<=4; lvl++){
+    const r = R*lvl/4;
+    const pts = crits.map((_,i)=>pt(i,r).join(",")).join(" ");
+    rings += `<polygon points="${pts}" fill="none" stroke="var(--line)" stroke-width="1"/>`;
+  }
+  let axes = "";
+  crits.forEach((c,i) => {
+    const [x,y] = pt(i,R);
+    axes += `<line x1="${center}" y1="${center}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="var(--line)" stroke-width="1"/>`;
+  });
+  let labels = "";
+  crits.forEach((c,i)=>{
+    const [x,y] = pt(i,R+14);
+    const a = angle(i);
+    let anchor = "middle";
+    if(Math.cos(a) > 0.25) anchor = "start";
+    else if(Math.cos(a) < -0.25) anchor = "end";
+    labels += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="${anchor}" dominant-baseline="middle" font-size="9.5" fill="var(--muted)" font-family="IBM Plex Sans, sans-serif">${CRIT_SHORT[c.key]}</text>`;
+  });
+
+  let polys = "";
+  const legendItems = [];
+  PERIODS.forEach(pd => {
+    const doc = evalCache[playerId+"__"+pd.key];
+    const scores = doc ? (doc.scores||{}) : {};
+    if(!Object.keys(scores).length) return;
+    const colorVar = `var(${PERIOD_COLOR_VAR[pd.key]})`;
+    const pts = crits.map((c,i)=>{
+      const v = typeof scores[c.key]==="number" ? scores[c.key] : 0;
+      return pt(i, R*v/4).map(n=>n.toFixed(1)).join(",");
+    }).join(" ");
+    polys += `<polygon points="${pts}" fill="${colorVar}" fill-opacity="0.16" stroke="${colorVar}" stroke-width="2"/>`;
+    crits.forEach((c,i) => {
+      const v = scores[c.key];
+      if(typeof v === "number"){
+        const [x,y] = pt(i, R*v/4);
+        polys += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="${colorVar}"/>`;
+      }
+    });
+    legendItems.push({label: pd.label, colorVar, avg: avgOf(scores)});
+  });
+
+  const svg = `<svg viewBox="0 0 ${size} ${size}" style="width:100%;height:auto;display:block;">${rings}${axes}${polys}${labels}</svg>`;
+  return {svg, legendItems};
+}
+
+/* ---------------- rendering: player detail ---------------- */
+function renderPlayerDetail(){
+  const p = playersById[state.currentPlayerId];
+  if(!p) return;
+  $("#oh-name").textContent = p.nomComplet;
+
+  const posteEntries = Object.entries(p.postes||{});
+  let metaHtml = `<span class="cat-tag">${p.categorie}</span>`;
+  if(p.archived) metaHtml += `<span class="archived-tag">Archivé</span>`;
+  posteEntries.forEach(([k,v]) => {
+    const cls = v === "Acquis" ? "acquis" : (v === "En cours" ? "encours" : "");
+    metaHtml += `<span class="poste-chip ${cls}">${POSTE_LABELS[k]||k}</span>`;
+  });
+  $("#oh-meta").innerHTML = metaHtml;
+
+  const mainTabsHtml = `<div class="main-tabs">
+      <button class="main-tab ${state.playerTab==='profil'?'active':''}" data-tab="profil">Profil</button>
+      <button class="main-tab ${state.playerTab==='saisie'?'active':''}" data-tab="saisie">Saisie</button>
+    </div>`;
+
+  let bodyHtml;
+  if(state.playerTab === "profil"){
+    const {svg, legendItems} = buildRadar(p.id);
+    const radarHtml = legendItems.length
+      ? `<div class="radar-card">${svg}<div class="radar-legend">${legendItems.map(li => `<div><span class="dot" style="background:${li.colorVar}"></span>${li.label}${li.avg!==null?' · '+li.avg.toFixed(1):''}</div>`).join("")}</div></div>`
+      : `<div class="radar-card"><div class="radar-empty">Aucune évaluation enregistrée pour l'instant.<br>Passe sur l'onglet "Saisie" pour commencer à noter ${p.prenom||p.nomComplet}.</div></div>`;
+
+    const historyHtml = PERIODS.map(pd => {
+      const doc = evalCache[p.id+"__"+pd.key] || {};
+      const avg = avgOf(doc.scores);
+      const band = bandOf(avg);
+      const sub = doc.commentaire ? doc.commentaire : (avg!==null ? `${Object.keys(doc.scores||{}).length}/10 critères notés` : "Pas encore de saisie");
+      return `<button class="history-row" data-period="${pd.key}">
+        <div class="hr-period">${pd.label}</div>
+        <div class="hr-comment">${sub}</div>
+        <div class="hr-avg" style="${band?`color:var(--lvl${band});`:'color:var(--muted);'}">${avg!==null?avg.toFixed(1)+'/4':'—'}</div>
+      </button>`;
+    }).join("");
+
+    bodyHtml = `${radarHtml}<div class="group-title">Historique par période</div>${historyHtml}`;
+  } else {
+    const docId = p.id + "__" + state.currentPeriod;
+    const doc = evalCache[docId] || {scores:{}, commentaire:"", evaluateur:null, updatedAt:null};
+    const avg = avgOf(doc.scores);
+    const band = bandOf(avg);
+
+    const periodTabsHtml = PERIODS.map(pd => `<button class="period-tab ${pd.key===state.currentPeriod?'active':''}" data-period="${pd.key}">${pd.label}</button>`).join("");
+
+    const avgHtml = `<div class="avg-card">
+        <div>
+          <div class="avg-card-label">Moyenne — ${PERIODS.find(pd=>pd.key===state.currentPeriod).label}</div>
+          <div class="avg-card-hint">${Object.keys(doc.scores||{}).length}/10 critères notés</div>
+        </div>
+        <div class="avg-big" style="${band?`color:var(--lvl${band});`:'color:var(--muted);'}">${avg!==null?avg.toFixed(1):"—"}<span>/4</span></div>
+      </div>`;
+
+    const groupsHtml = GROUPS.map(g => {
+      const rows = g.criteres.map(c => {
+        const val = doc.scores ? doc.scores[c.key] : undefined;
+        const infoKey = docId+"|"+c.key;
+        const infoOpen = !!state.infoOpen[infoKey];
+        const lvlBtns = [1,2,3,4].map(n => `<button class="lvl-btn l${n} ${val===n?'sel':''}" data-crit="${c.key}" data-val="${n}">${n}</button>`).join("");
+        let descHtml = "";
+        if(infoOpen){
+          descHtml = `<div class="crit-desc"><b>Comment tester :</b> ${c.comment}</div>
+            <div class="crit-levels">
+              ${[0,1,2,3].map(i => `<div class="${val===i+1?'cur':''}"><b>${i+1}</b><span>${c.niveaux[i]}</span></div>`).join("")}
+            </div>`;
+        }
+        return `<div class="crit-card">
+          <div class="crit-top">
+            <div class="crit-name">${c.critere}</div>
+            <button class="info-btn ${infoOpen?'on':''}" data-info="${infoKey}">i</button>
+          </div>
+          <div class="lvl-row">${lvlBtns}</div>
+          ${descHtml}
+        </div>`;
+      }).join("");
+      return `<div class="group-title">${g.cat}</div>${rows}`;
+    }).join("");
+
+    const evaluateurStored = localStorage.getItem("foot_evaluateur_name") || "";
+    const updatedLine = doc.updatedAt
+      ? `Dernière mise à jour : ${new Date(doc.updatedAt).toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}${doc.evaluateur?' · par '+doc.evaluateur:''}`
+      : "Pas encore de saisie pour cette période.";
+
+    bodyHtml = `
+      <div class="period-tabs">${periodTabsHtml}</div>
+      ${avgHtml}
+      ${groupsHtml}
+      <div class="comment-card">
+        <label>Commentaire — ${PERIODS.find(pd=>pd.key===state.currentPeriod).label}</label>
+        <textarea id="comment-input" placeholder="Observations, points de progression...">${doc.commentaire||""}</textarea>
+      </div>
+      <div class="meta-foot">
+        <div class="evalfield">
+          <label>Évalué par</label>
+          <input id="evaluateur-input" type="text" placeholder="Votre prénom" value="${evaluateurStored}">
+        </div>
+        <div class="meta-line">${updatedLine}</div>
+      </div>
+    `;
+  }
+
+  $("#overlay-body").innerHTML = mainTabsHtml + bodyHtml;
+
+  $$("#overlay-body .main-tab").forEach(btn => btn.addEventListener("click", () => {
+    state.playerTab = btn.dataset.tab;
+    renderPlayerDetail();
+  }));
+
+  if(state.playerTab === "profil"){
+    $$("#overlay-body .history-row").forEach(btn => btn.addEventListener("click", () => {
+      state.currentPeriod = btn.dataset.period;
+      state.playerTab = "saisie";
+      renderPlayerDetail();
+    }));
+    return;
+  }
+
+  const docId = p.id + "__" + state.currentPeriod;
+  $$("#overlay-body .period-tab").forEach(btn => btn.addEventListener("click", () => {
+    state.currentPeriod = btn.dataset.period;
+    renderPlayerDetail();
+  }));
+  $$("#overlay-body .lvl-btn").forEach(btn => btn.addEventListener("click", () => {
+    const critKey = btn.dataset.crit;
+    const val = parseInt(btn.dataset.val,10);
+    const current = (evalCache[docId] && evalCache[docId].scores) ? evalCache[docId].scores[critKey] : undefined;
+    const newVal = current === val ? undefined : val; // tap again to clear
+    setScore(p.id, state.currentPeriod, critKey, newVal);
+  }));
+  $$("#overlay-body .info-btn").forEach(btn => btn.addEventListener("click", () => {
+    const key = btn.dataset.info;
+    state.infoOpen[key] = !state.infoOpen[key];
+    renderPlayerDetail();
+  }));
+  const commentEl = $("#comment-input");
+  const docForComment = evalCache[docId] || {};
+  commentEl.addEventListener("blur", () => {
+    if(commentEl.value !== (docForComment.commentaire||"")) saveComment(p.id, state.currentPeriod, commentEl.value);
+  });
+  const evalInput = $("#evaluateur-input");
+  evalInput.addEventListener("change", () => {
+    localStorage.setItem("foot_evaluateur_name", evalInput.value.trim());
+  });
+}
+
+/* ---------------- db writes ---------------- */
+function evaluateurName(){
+  return (localStorage.getItem("foot_evaluateur_name") || "").trim() || null;
+}
+
+async function ensureEvalDoc(playerId, periodKey){
+  const p = playersById[playerId];
+  const pd = PERIODS.find(x=>x.key===periodKey);
+  const docId = playerId + "__" + periodKey;
+  if(!evalCache[docId]) evalCache[docId] = {playerId, periode: pd.label, scores:{}, commentaire:"", evaluateur:null, updatedAt:null};
+  return docId;
+}
+
+async function setScore(playerId, periodKey, critKey, value){
+  const docId = await ensureEvalDoc(playerId, periodKey);
+  const local = evalCache[docId];
+  local.scores = {...(local.scores||{})};
+  if(value === undefined) delete local.scores[critKey]; else local.scores[critKey] = value;
+  local.updatedAt = new Date().toISOString();
+  local.evaluateur = evaluateurName();
+  renderPlayerDetail();
+  renderRoster();
+  if(!db){ toast("Hors ligne — non enregistré"); return; }
+  try{
+    const fieldVal = value === undefined ? firebase.firestore.FieldValue.delete() : value;
+    await db.doc("evaluations/"+docId).set({
+      playerId, periode: PERIODS.find(x=>x.key===periodKey).label,
+      scores:{[critKey]: fieldVal}, updatedAt: local.updatedAt, evaluateur: local.evaluateur
+    }, {merge:true});
+    toast("Enregistré");
+  }catch(e){
+    console.error(e);
+    toast("Erreur d'enregistrement");
+  }
+}
+
+async function saveComment(playerId, periodKey, text){
+  const docId = await ensureEvalDoc(playerId, periodKey);
+  const local = evalCache[docId];
+  local.commentaire = text;
+  local.updatedAt = new Date().toISOString();
+  local.evaluateur = evaluateurName();
+  if(!db){ toast("Hors ligne — non enregistré"); return; }
+  try{
+    await db.doc("evaluations/"+docId).set({
+      playerId, periode: PERIODS.find(x=>x.key===periodKey).label,
+      commentaire:text, updatedAt: local.updatedAt, evaluateur: local.evaluateur
+    }, {merge:true});
+    toast("Enregistré");
+  }catch(e){
+    console.error(e);
+    toast("Erreur d'enregistrement");
+  }
+}
+
+async function addPlayer(nom, prenom, categorie, postes){
+  const nomComplet = nom.trim() + " " + prenom.trim();
+  let id = slugify(nomComplet);
+  if(playersById[id]) id = id + "-" + Math.floor(Math.random()*900+100);
+  const player = {id, nom: nom.trim(), prenom: prenom.trim(), nomComplet, categorie, licence:false, postes: postes||{}, archived:false};
+  playersById[id] = player;
+  if(!DATA.players.find(p=>p.id===id)) DATA.players.push(player);
+  PERIODS.forEach(pd => {
+    const docId = id + "__" + pd.key;
+    evalCache[docId] = {playerId:id, periode: pd.label, scores:{}, commentaire:"", evaluateur:null, updatedAt:null};
+  });
+  renderRoster();
+  if(db){
+    try{
+      await db.doc("players/"+id).set(player);
+      for(const pd of PERIODS){
+        await db.doc("evaluations/"+id+"__"+pd.key).set(evalCache[id+"__"+pd.key]);
+      }
+      toast("Joueur ajouté");
+    }catch(e){ console.error(e); toast("Ajouté (hors ligne)"); }
+  } else {
+    toast("Ajouté (hors ligne)");
+  }
+}
+
+async function editPlayer(id, {nom, prenom, categorie, postes}){
+  const p = playersById[id];
+  if(!p) return;
+  const nomComplet = nom.trim() + " " + prenom.trim();
+  Object.assign(p, {nom: nom.trim(), prenom: prenom.trim(), nomComplet, categorie, postes});
+  renderRoster();
+  if(state.currentPlayerId === id) renderPlayerDetail();
+  if(!db){ toast("Modifié (hors ligne)"); return; }
+  try{
+    await db.doc("players/"+id).set({nom:p.nom, prenom:p.prenom, nomComplet, categorie, postes}, {merge:true});
+    toast("Joueur modifié");
+  }catch(e){ console.error(e); toast("Erreur"); }
+}
+
+async function archivePlayer(id, archived){
+  const p = playersById[id];
+  if(!p) return;
+  p.archived = archived;
+  renderRoster();
+  if(state.currentPlayerId === id) renderPlayerDetail();
+  if(!db){ toast(archived ? "Archivé (hors ligne)" : "Désarchivé (hors ligne)"); return; }
+  try{
+    await db.doc("players/"+id).set({archived}, {merge:true});
+    toast(archived ? "Joueur archivé" : "Joueur désarchivé");
+  }catch(e){ console.error(e); toast("Erreur"); }
+}
+
+async function deletePlayer(id){
+  delete playersById[id];
+  DATA.players = DATA.players.filter(p => p.id !== id);
+  PERIODS.forEach(pd => delete evalCache[id+"__"+pd.key]);
+  closePlayer();
+  renderRoster();
+  if(!db){ toast("Supprimé (hors ligne)"); return; }
+  try{
+    await db.doc("players/"+id).delete();
+    for(const pd of PERIODS){ await db.doc("evaluations/"+id+"__"+pd.key).delete(); }
+    toast("Joueur supprimé");
+  }catch(e){ console.error(e); toast("Erreur de suppression"); }
+}
+
+/* ---------------- navigation ---------------- */
+function setView(view){
+  state.view = view;
+  $("#view-roster").hidden = view !== "roster";
+  $("#view-reperes").hidden = view !== "reperes";
+  $$(".tab").forEach(t => t.classList.toggle("active", t.dataset.view === view));
+  $("#fab-add").style.display = view === "roster" ? "flex" : "none";
+}
+
+function openPlayer(id){
+  state.currentPlayerId = id;
+  state.currentPeriod = PERIODS[0].key;
+  state.playerTab = "profil";
+  renderPlayerDetail();
+  $("#overlay").classList.add("open");
+}
+function closePlayer(){
+  $("#overlay").classList.remove("open");
+}
+
+/* ---------------- player modal (add/edit) ---------------- */
+function renderModalPostes(){
+  const wrap = $("#np-postes");
+  wrap.innerHTML = Object.keys(POSTE_LABELS).map(k => {
+    const v = state.modalPostes[k];
+    return `<button type="button" class="poste-edit-chip ${posteStateClass(v)}" data-poste="${k}">${POSTE_LABELS[k]}${v?' · '+v:''}</button>`;
+  }).join("");
+  $$("#np-postes .poste-edit-chip").forEach(btn => btn.addEventListener("click", () => {
+    const k = btn.dataset.poste;
+    const cur = state.modalPostes[k];
+    const idx = POSTE_STATES.indexOf(cur);
+    const next = POSTE_STATES[(idx+1) % POSTE_STATES.length];
+    if(next === undefined) delete state.modalPostes[k]; else state.modalPostes[k] = next;
+    renderModalPostes();
+  }));
+}
+
+function openPlayerModal(playerId){
+  state.editingPlayerId = playerId;
+  const p = playerId ? playersById[playerId] : null;
+  $("#np-title").textContent = p ? "Modifier " + p.nomComplet : "Ajouter un joueur";
+  $("#np-save").textContent = p ? "Enregistrer" : "Ajouter";
+  $("#np-nom").value = p ? p.nom : "";
+  $("#np-prenom").value = p ? p.prenom : "";
+  $("#np-cat").value = p ? p.categorie : "U12";
+  state.modalPostes = p ? {...(p.postes||{})} : {};
+  renderModalPostes();
+  $("#modal-backdrop").classList.add("show");
+}
+
+/* ---------------- player actions sheet ---------------- */
+function openActionsSheet(){
+  const p = playersById[state.currentPlayerId];
+  if(!p) return;
+  const sheet = $("#actions-sheet");
+  sheet.innerHTML = `
+    <h3>${p.nomComplet}</h3>
+    <button class="action-sheet-item" id="act-edit">Modifier les informations</button>
+    <button class="action-sheet-item" id="act-archive">${p.archived ? "Désarchiver ce joueur" : "Archiver ce joueur"}</button>
+    <button class="action-sheet-item danger" id="act-delete">Supprimer définitivement</button>
+    <div id="act-confirm-zone" hidden></div>
+  `;
+  $("#actions-backdrop").classList.add("show");
+
+  $("#act-edit").addEventListener("click", () => {
+    $("#actions-backdrop").classList.remove("show");
+    openPlayerModal(p.id);
+  });
+  $("#act-archive").addEventListener("click", () => {
+    $("#actions-backdrop").classList.remove("show");
+    archivePlayer(p.id, !p.archived);
+  });
+  $("#act-delete").addEventListener("click", () => {
+    $("#act-delete").hidden = true;
+    const zone = $("#act-confirm-zone");
+    zone.hidden = false;
+    zone.innerHTML = `
+      <div style="padding:10px 4px 4px; font-size:13.5px;">Supprimer <b>${p.nomComplet}</b> et toutes ses évaluations, définitivement ?</div>
+      <div class="modal-actions" style="margin-top:10px;">
+        <button class="btn" id="act-cancel-delete">Annuler</button>
+        <button class="btn primary" style="background:var(--lvl1);border-color:var(--lvl1);" id="act-confirm-delete">Supprimer</button>
+      </div>`;
+    $("#act-cancel-delete").addEventListener("click", () => $("#actions-backdrop").classList.remove("show"));
+    $("#act-confirm-delete").addEventListener("click", () => {
+      $("#actions-backdrop").classList.remove("show");
+      deletePlayer(p.id);
+    });
+  });
+}
+
+/* ---------------- wiring ---------------- */
+$$(".tab").forEach(t => t.addEventListener("click", () => setView(t.dataset.view)));
+$("#btn-back").addEventListener("click", closePlayer);
+$("#search-input").addEventListener("input", e => { state.search = e.target.value; renderRoster(); });
+$$("#cat-filters .chip").forEach(chip => chip.addEventListener("click", () => {
+  state.catFilter = chip.dataset.cat;
+  $$("#cat-filters .chip").forEach(c => c.classList.toggle("active", c===chip));
+  renderRoster();
+}));
+
+$("#btn-settings").addEventListener("click", () => {
+  toast("Réglez votre nom d'évaluateur dans une fiche joueur");
+});
+
+$("#fab-add").addEventListener("click", () => openPlayerModal(null));
+$("#np-cancel").addEventListener("click", () => $("#modal-backdrop").classList.remove("show"));
+$("#modal-backdrop").addEventListener("click", e => { if(e.target.id==="modal-backdrop") $("#modal-backdrop").classList.remove("show"); });
+$("#np-save").addEventListener("click", () => {
+  const nom = $("#np-nom").value.trim();
+  const prenom = $("#np-prenom").value.trim();
+  const cat = $("#np-cat").value;
+  if(!nom || !prenom){ toast("Nom et prénom requis"); return; }
+  if(state.editingPlayerId){
+    editPlayer(state.editingPlayerId, {nom, prenom, categorie: cat, postes: {...state.modalPostes}});
+  } else {
+    addPlayer(nom, prenom, cat, {...state.modalPostes});
+  }
+  $("#modal-backdrop").classList.remove("show");
+});
+
+$("#btn-kebab").addEventListener("click", openActionsSheet);
+$("#actions-backdrop").addEventListener("click", e => { if(e.target.id==="actions-backdrop") $("#actions-backdrop").classList.remove("show"); });
+
+$("#archive-toggle-link").addEventListener("click", () => {
+  state.showArchived = !state.showArchived;
+  renderRoster();
+});
+
+/* ---------------- init ---------------- */
+renderRoster();
+renderReperes();
+setView("roster");
+
+function showConfigBanner(msg){
+  const b = document.createElement("div");
+  b.style.cssText = "position:sticky;top:0;z-index:8;background:var(--lvl2-soft);color:var(--lvl2);font-size:12.5px;font-weight:600;padding:8px 16px;text-align:center;";
+  b.textContent = msg;
+  document.querySelector(".shell").insertBefore(b, document.querySelector("main"));
+}
+
+(async () => {
+  const configured = firebaseConfig.apiKey && firebaseConfig.apiKey.indexOf("REMPLACE") === -1;
+  if(!configured){
+    showConfigBanner("⚠️ Firebase non configuré — voir firebaseConfig en haut du script. L'appli fonctionne en local uniquement pour l'instant.");
+    return;
+  }
+  try{
+    firebase.initializeApp(firebaseConfig);
+  }catch(e){ console.error("Firebase init a échoué", e); showConfigBanner("⚠️ Config Firebase invalide."); return; }
+
+  try{
+    await firebase.auth().signInAnonymously();
+  }catch(e){
+    console.error("Connexion Firebase impossible", e);
+    showConfigBanner("⚠️ Connexion Firebase impossible (auth anonyme activée ?).");
+    return;
+  }
+
+  db = firebase.firestore();
+
+  try{
+    db.collection("players").onSnapshot(snap => {
+      if(snap.empty) return;
+      const fresh = {};
+      snap.docs.forEach(d => fresh[d.id] = d.data());
+      Object.assign(playersById, fresh);
+      DATA.players = Object.values(playersById);
+      renderRoster();
+      if(state.currentPlayerId) renderPlayerDetail();
+    }, err => { console.error(err); });
+  }catch(e){ console.error(e); }
+
+  try{
+    db.collection("evaluations").onSnapshot(snap => {
+      snap.docs.forEach(d => { evalCache[d.id] = d.data(); });
+      renderRoster();
+      if(state.currentPlayerId) renderPlayerDetail();
+    }, err => { console.error(err); });
+  }catch(e){ console.error(e); }
+
+  // seed once if the database is empty (first ever load)
+  try{
+    const snap = await db.collection("players").limit(1).get();
+    if(snap.empty){
+      const batch = db.batch();
+      DATA.players.forEach(p => batch.set(db.doc("players/"+p.id), p));
+      DATA.players.forEach(p => PERIODS.forEach(pd => {
+        const docId = p.id + "__" + pd.key;
+        batch.set(db.doc("evaluations/"+docId), evalCache[docId]);
+      }));
+      await batch.commit();
+    }
+  }catch(e){ console.error("Seed initiale impossible", e); }
+})();
+</script>
+</body>
+</html>
