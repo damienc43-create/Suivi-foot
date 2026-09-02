@@ -346,6 +346,42 @@
   .crit-levels div b{flex:none; width:14px; color:var(--ink);}
   .crit-levels div.cur{color:var(--ink); font-weight:600;}
 
+  .num-row{display:flex; align-items:center; gap:8px; margin-top:9px;}
+  .num-input{
+    width:72px; flex:none; border:1px solid var(--line); background:var(--surface); border-radius:9px;
+    padding:7px 8px; font-family:"IBM Plex Sans"; font-size:15px; font-weight:600; color:var(--ink); text-align:center;
+  }
+  .num-input:focus{outline:none; border-color:var(--accent);}
+  .num-unit{font-size:12.5px; color:var(--muted); flex:none;}
+  .num-level{
+    margin-left:auto; font-family:"Barlow Condensed"; font-weight:700; font-size:13px; letter-spacing:.02em;
+    padding:5px 10px; border-radius:8px; background:var(--surface-2); color:var(--muted); text-align:center; flex:none;
+  }
+  .num-level.l1{background:var(--lvl1-soft); color:var(--lvl1);}
+  .num-level.l2{background:var(--lvl2-soft); color:var(--lvl2);}
+  .num-level.l3{background:var(--lvl3-soft); color:var(--lvl3);}
+  .num-level.l4{background:var(--lvl4-soft); color:var(--lvl4);}
+
+  .crit-detail-row{display:flex; align-items:center; gap:8px; padding:6px 2px; border-bottom:1px solid var(--line); font-size:12.5px;}
+  .crit-detail-row:last-child{border-bottom:none;}
+  .cdr-name{flex:1; color:var(--ink);}
+  .cdr-val{color:var(--muted); flex:none; max-width:46%; text-align:right;}
+  .cdr-lvl{flex:none; width:26px; height:20px; border-radius:6px; font-family:"Barlow Condensed"; font-weight:700; font-size:12px; display:flex; align-items:center; justify-content:center;}
+  .cdr-lvl.l1{background:var(--lvl1-soft); color:var(--lvl1);}
+  .cdr-lvl.l2{background:var(--lvl2-soft); color:var(--lvl2);}
+  .cdr-lvl.l3{background:var(--lvl3-soft); color:var(--lvl3);}
+  .cdr-lvl.l4{background:var(--lvl4-soft); color:var(--lvl4);}
+  .cdr-lvl.l0{background:var(--surface-2); color:var(--muted);}
+
+  .history-row-wrap{display:flex; align-items:stretch; gap:6px; margin-bottom:8px;}
+  .history-row-wrap .history-row{flex:1; margin-bottom:0;}
+  .detail-toggle{
+    flex:none; width:36px; border:1px solid var(--line); border-radius:12px; background:var(--surface);
+    color:var(--muted); font-size:13px; display:flex; align-items:center; justify-content:center;
+  }
+  .detail-toggle.open{background:var(--accent-soft,var(--surface-2)); color:var(--accent);}
+  .history-detail{background:var(--surface); border:1px solid var(--line); border-radius:13px; padding:4px 10px; margin:-4px 0 8px;}
+
   .comment-card{background:var(--surface); border:1px solid var(--line); border-radius:13px; padding:12px; margin-top:16px;}
   .comment-card label{font-size:12.5px; font-weight:600; color:var(--muted); display:block; margin-bottom:6px;}
   .comment-card textarea{
@@ -550,6 +586,30 @@ const POSTE_LABELS = {gar:"Gardien", defD:"Défenseur droit", defC:"Défenseur c
 const GROUP_ORDER = ["Technique","Tactique","Physique","Comportement"];
 const GROUPS = GROUP_ORDER.map(cat => ({cat, criteres: DATA.grille.filter(g => g.categorie === cat)}));
 
+/* Critères mesurables : on saisit la valeur réelle et le niveau (1-4) est calculé
+   automatiquement à partir des mêmes bornes que la grille de test. */
+const NUMERIC_CRITS = {
+  jonglerie:      {unit:"contacts", higherBetter:true,  thresholds:[2,9,24],   step:1,   min:0},
+  passesPrecises: {unit:"/10",      higherBetter:true,  thresholds:[3,6,8],    step:1,   min:0, max:10},
+  tirsCadres:     {unit:"/10",      higherBetter:true,  thresholds:[2,5,8],    step:1,   min:0, max:10},
+  vitesse20m:     {unit:"s",        higherBetter:false, thresholds:[3.6,4.0,4.5], step:0.1, min:0},
+  endurance:      {unit:"palier",   higherBetter:true,  thresholds:[6,8,10],   step:1,   min:0}
+};
+
+function levelFromRaw(critKey, rawValue){
+  const cfg = NUMERIC_CRITS[critKey];
+  if(!cfg) return undefined;
+  if(rawValue === undefined || rawValue === null || rawValue === "") return undefined;
+  const v = parseFloat(rawValue);
+  if(isNaN(v)) return undefined;
+  const [a,b,c] = cfg.thresholds;
+  if(cfg.higherBetter){
+    if(v<=a) return 1; if(v<=b) return 2; if(v<=c) return 3; return 4;
+  } else {
+    if(v<=a) return 4; if(v<=b) return 3; if(v<=c) return 2; return 1;
+  }
+}
+
 const PERIODS = [
   {key:"rentree", label:"Rentrée"},
   {key:"mi-saison", label:"Mi-saison"},
@@ -574,6 +634,7 @@ let state = {
   currentPeriod: PERIODS[0].key,
   playerTab: "profil",
   infoOpen: {},
+  detailOpen: {},
   showArchived: false,
   editingPlayerId: null,
   modalPostes: {}
@@ -803,11 +864,41 @@ function renderPlayerDetail(){
       const avg = avgOf(doc.scores);
       const band = bandOf(avg);
       const sub = doc.commentaire ? doc.commentaire : (avg!==null ? `${Object.keys(doc.scores||{}).length}/10 critères notés` : "Pas encore de saisie");
-      return `<button class="history-row" data-period="${pd.key}">
-        <div class="hr-period">${pd.label}</div>
-        <div class="hr-comment">${sub}</div>
-        <div class="hr-avg" style="${band?`color:var(--lvl${band});`:'color:var(--muted);'}">${avg!==null?avg.toFixed(1)+'/4':'—'}</div>
-      </button>`;
+      const detailKey = p.id+"__"+pd.key;
+      const detailOpen = !!state.detailOpen[detailKey];
+      const hasData = avg !== null;
+
+      let detailHtml = "";
+      if(detailOpen){
+        const rows = DATA.grille.map(c => {
+          const lvl = doc.scores ? doc.scores[c.key] : undefined;
+          const rawCfg = NUMERIC_CRITS[c.key];
+          const raw = doc.raw ? doc.raw[c.key] : undefined;
+          let valLabel;
+          if(rawCfg && raw !== undefined && raw !== null && raw !== ""){
+            valLabel = `${raw} ${rawCfg.unit}`;
+          } else if(lvl){
+            valLabel = c.niveaux[lvl-1];
+          } else {
+            valLabel = "—";
+          }
+          return `<div class="crit-detail-row">
+            <span class="cdr-name">${c.critere}</span>
+            <span class="cdr-val">${valLabel}</span>
+            <span class="cdr-lvl l${lvl||0}">${lvl?('N'+lvl):'—'}</span>
+          </div>`;
+        }).join("");
+        detailHtml = `<div class="history-detail">${rows}</div>`;
+      }
+
+      return `<div class="history-row-wrap">
+        <button class="history-row" data-period="${pd.key}">
+          <div class="hr-period">${pd.label}</div>
+          <div class="hr-comment">${sub}</div>
+          <div class="hr-avg" style="${band?`color:var(--lvl${band});`:'color:var(--muted);'}">${avg!==null?avg.toFixed(1)+'/4':'—'}</div>
+        </button>
+        ${hasData ? `<button class="detail-toggle ${detailOpen?'open':''}" data-detail="${detailKey}">${detailOpen?'▲':'▼'}</button>` : ""}
+      </div>${detailHtml}`;
     }).join("");
 
     bodyHtml = `${radarHtml}<div class="group-title">Historique par période</div>${historyHtml}`;
@@ -832,7 +923,23 @@ function renderPlayerDetail(){
         const val = doc.scores ? doc.scores[c.key] : undefined;
         const infoKey = docId+"|"+c.key;
         const infoOpen = !!state.infoOpen[infoKey];
-        const lvlBtns = [1,2,3,4].map(n => `<button class="lvl-btn l${n} ${val===n?'sel':''}" data-crit="${c.key}" data-val="${n}">${n}</button>`).join("");
+        const rawCfg = NUMERIC_CRITS[c.key];
+
+        let inputHtml;
+        if(rawCfg){
+          const raw = doc.raw ? doc.raw[c.key] : undefined;
+          const rawStr = (raw===undefined||raw===null) ? "" : raw;
+          inputHtml = `<div class="num-row">
+            <input type="number" inputmode="decimal" class="num-input" data-crit="${c.key}"
+              value="${rawStr}" placeholder="—" step="${rawCfg.step}" min="${rawCfg.min}" ${rawCfg.max!==undefined?`max="${rawCfg.max}"`:""}>
+            <span class="num-unit">${rawCfg.unit}</span>
+            <span class="num-level ${val?('l'+val):''}" id="lvl-badge__${c.key}">${val?('Niveau '+val):'—'}</span>
+          </div>`;
+        } else {
+          const lvlBtns = [1,2,3,4].map(n => `<button class="lvl-btn l${n} ${val===n?'sel':''}" data-crit="${c.key}" data-val="${n}">${n}</button>`).join("");
+          inputHtml = `<div class="lvl-row">${lvlBtns}</div>`;
+        }
+
         let descHtml = "";
         if(infoOpen){
           descHtml = `<div class="crit-desc"><b>Comment tester :</b> ${c.comment}</div>
@@ -845,7 +952,7 @@ function renderPlayerDetail(){
             <div class="crit-name">${c.critere}</div>
             <button class="info-btn ${infoOpen?'on':''}" data-info="${infoKey}">i</button>
           </div>
-          <div class="lvl-row">${lvlBtns}</div>
+          ${inputHtml}
           ${descHtml}
         </div>`;
       }).join("");
@@ -888,6 +995,12 @@ function renderPlayerDetail(){
       state.playerTab = "saisie";
       renderPlayerDetail();
     }));
+    $$("#overlay-body .detail-toggle").forEach(btn => btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const key = btn.dataset.detail;
+      state.detailOpen[key] = !state.detailOpen[key];
+      renderPlayerDetail();
+    }));
     return;
   }
 
@@ -903,6 +1016,23 @@ function renderPlayerDetail(){
     const newVal = current === val ? undefined : val; // tap again to clear
     setScore(p.id, state.currentPeriod, critKey, newVal);
   }));
+  $$("#overlay-body .num-input").forEach(input => {
+    input.addEventListener("input", () => {
+      const critKey = input.dataset.crit;
+      const lvl = levelFromRaw(critKey, input.value);
+      const badge = document.getElementById("lvl-badge__"+critKey);
+      if(badge){
+        badge.className = "num-level" + (lvl ? " l"+lvl : "");
+        badge.textContent = lvl ? "Niveau "+lvl : "—";
+      }
+    });
+    input.addEventListener("blur", () => {
+      const critKey = input.dataset.crit;
+      const stored = (evalCache[docId] && evalCache[docId].raw) ? evalCache[docId].raw[critKey] : undefined;
+      const storedStr = (stored===undefined||stored===null) ? "" : String(stored);
+      if(input.value !== storedStr) setRawScore(p.id, state.currentPeriod, critKey, input.value);
+    });
+  });
   $$("#overlay-body .info-btn").forEach(btn => btn.addEventListener("click", () => {
     const key = btn.dataset.info;
     state.infoOpen[key] = !state.infoOpen[key];
@@ -928,7 +1058,7 @@ async function ensureEvalDoc(playerId, periodKey){
   const p = playersById[playerId];
   const pd = PERIODS.find(x=>x.key===periodKey);
   const docId = playerId + "__" + periodKey;
-  if(!evalCache[docId]) evalCache[docId] = {playerId, periode: pd.label, scores:{}, commentaire:"", evaluateur:null, updatedAt:null};
+  if(!evalCache[docId]) evalCache[docId] = {playerId, periode: pd.label, scores:{}, raw:{}, commentaire:"", evaluateur:null, updatedAt:null};
   return docId;
 }
 
@@ -947,6 +1077,40 @@ async function setScore(playerId, periodKey, critKey, value){
     await db.doc("evaluations/"+docId).set({
       playerId, periode: PERIODS.find(x=>x.key===periodKey).label,
       scores:{[critKey]: fieldVal}, updatedAt: local.updatedAt, evaluateur: local.evaluateur
+    }, {merge:true});
+    toast("Enregistré");
+  }catch(e){
+    console.error(e);
+    toast("Erreur d'enregistrement");
+  }
+}
+
+async function setRawScore(playerId, periodKey, critKey, rawInput){
+  const docId = await ensureEvalDoc(playerId, periodKey);
+  const local = evalCache[docId];
+  local.raw = {...(local.raw||{})};
+  local.scores = {...(local.scores||{})};
+
+  const trimmed = (rawInput===undefined||rawInput===null) ? "" : String(rawInput).trim();
+  const cleared = trimmed === "";
+  const rawNum = cleared ? undefined : parseFloat(trimmed.replace(",","."));
+  const level = cleared ? undefined : levelFromRaw(critKey, rawNum);
+
+  if(cleared){ delete local.raw[critKey]; delete local.scores[critKey]; }
+  else { local.raw[critKey] = rawNum; local.scores[critKey] = level; }
+
+  local.updatedAt = new Date().toISOString();
+  local.evaluateur = evaluateurName();
+  renderPlayerDetail();
+  renderRoster();
+  if(!db){ toast("Hors ligne — non enregistré"); return; }
+  try{
+    const rawFieldVal = cleared ? firebase.firestore.FieldValue.delete() : rawNum;
+    const scoreFieldVal = cleared ? firebase.firestore.FieldValue.delete() : level;
+    await db.doc("evaluations/"+docId).set({
+      playerId, periode: PERIODS.find(x=>x.key===periodKey).label,
+      raw:{[critKey]: rawFieldVal}, scores:{[critKey]: scoreFieldVal},
+      updatedAt: local.updatedAt, evaluateur: local.evaluateur
     }, {merge:true});
     toast("Enregistré");
   }catch(e){
