@@ -262,7 +262,7 @@
   .nav-btn:disabled{opacity:.3;}
 
   .main-tabs{
-    display:grid; grid-template-columns:1fr 1fr; gap:4px;
+    display:grid; grid-template-columns:1fr 1fr 1fr; gap:4px;
     background:var(--surface-2); border-radius:12px; padding:4px; margin-bottom:14px;
   }
   .main-tab{
@@ -431,6 +431,18 @@
   .comment-card textarea{
     width:100%; min-height:70px; border:none; outline:none; background:none; resize:vertical;
     font-size:14.5px; line-height:1.4; color:var(--ink);
+  }
+
+  .info-card{background:var(--surface); border:1px solid var(--line); border-radius:13px; padding:14px; margin-bottom:12px;}
+  .info-card label{font-size:12.5px; font-weight:600; color:var(--muted);}
+  .tel-row{display:flex; align-items:center; gap:8px; margin-bottom:8px;}
+  .tel-input{
+    flex:1; border:1px solid var(--line); background:var(--surface-2); border-radius:10px;
+    padding:9px 11px; font-size:14.5px; outline:none;
+  }
+  .tel-remove{
+    flex:none; width:34px; height:34px; border-radius:50%; border:1px solid var(--line); background:var(--surface-2);
+    color:var(--lvl1); font-size:14px; display:flex; align-items:center; justify-content:center;
   }
 
   .meta-foot{margin-top:16px; display:flex; flex-direction:column; gap:8px;}
@@ -952,6 +964,7 @@ function renderPlayerDetail(){
   const mainTabsHtml = `<div class="main-tabs">
       <button class="main-tab ${state.playerTab==='profil'?'active':''}" data-tab="profil">Profil</button>
       <button class="main-tab ${state.playerTab==='saisie'?'active':''}" data-tab="saisie">Saisie</button>
+      <button class="main-tab ${state.playerTab==='info'?'active':''}" data-tab="info">Info</button>
     </div>`;
 
   let bodyHtml;
@@ -1004,6 +1017,8 @@ function renderPlayerDetail(){
     }).join("");
 
     bodyHtml = `${radarHtml}<div class="group-title">Historique par période</div>${historyHtml}`;
+  } else if(state.playerTab === "info"){
+    bodyHtml = renderInfoTabBody(p);
   } else {
     const docId = p.id + "__" + state.currentPeriod;
     const doc = evalCache[docId] || {scores:{}, commentaire:"", evaluateur:null, updatedAt:null};
@@ -1107,6 +1122,11 @@ function renderPlayerDetail(){
       state.detailOpen[key] = !state.detailOpen[key];
       renderPlayerDetail();
     }));
+    return;
+  }
+
+  if(state.playerTab === "info"){
+    wireInfoTab(p);
     return;
   }
 
@@ -1292,7 +1312,8 @@ async function addPlayer(nom, prenom, categorie, postes){
   const nomComplet = nom.trim() + " " + prenom.trim();
   let id = slugify(nomComplet);
   if(playersById[id]) id = id + "-" + Math.floor(Math.random()*900+100);
-  const player = {id, nom: nom.trim(), prenom: prenom.trim(), nomComplet, categorie, licence:false, paiement:false, equipement:false, postes: postes||{}, archived:false};
+  const player = {id, nom: nom.trim(), prenom: prenom.trim(), nomComplet, categorie, licence:false, paiement:false, equipement:false,
+    dateNaissance:"", lieuNaissance:"", email:"", telephones:[], postes: postes||{}, archived:false};
   playersById[id] = player;
   if(!DATA.players.find(p=>p.id===id)) DATA.players.push(player);
   PERIODS.forEach(pd => {
@@ -1337,6 +1358,92 @@ async function archivePlayer(id, archived){
   try{
     await db.doc("players/"+id).set({archived}, {merge:true});
     toast(archived ? "Joueur archivé" : "Joueur désarchivé");
+  }catch(e){ console.error(e); toast("Erreur"); }
+}
+
+/* ---------------- rendering: info tab ---------------- */
+function renderInfoTabBody(p){
+  const phones = (Array.isArray(p.telephones) && p.telephones.length) ? p.telephones : [""];
+  const telRows = phones.map((tel, i) => `
+    <div class="tel-row">
+      <input type="tel" inputmode="tel" class="tel-input" data-idx="${i}" placeholder="ex. 06 12 34 56 78" value="${tel||""}">
+      <button class="tel-remove" type="button" data-idx="${i}" title="Supprimer ce numéro">✕</button>
+    </div>`).join("");
+
+  return `
+    <div class="info-card">
+      <div class="field"><label>Date de naissance</label><input type="date" id="info-dob" value="${p.dateNaissance||""}"></div>
+      <div class="field"><label>Lieu de naissance</label><input type="text" id="info-pob" placeholder="ex. Clermont-Ferrand" value="${p.lieuNaissance||""}"></div>
+      <div class="field" style="margin-bottom:0;"><label>Email</label><input type="email" id="info-email" placeholder="ex. parent@mail.com" value="${p.email||""}"></div>
+    </div>
+    <div class="info-card">
+      <label style="display:block;margin-bottom:8px;">Téléphone(s)</label>
+      <div id="tel-rows">${telRows}</div>
+      <button class="btn" id="info-add-tel" type="button" style="margin-top:2px;">+ Ajouter un numéro</button>
+    </div>
+  `;
+}
+
+function wireInfoTab(p){
+  const dobInput = $("#info-dob");
+  dobInput.addEventListener("change", () => setPlayerInfoField(p.id, "dateNaissance", dobInput.value));
+
+  const pobInput = $("#info-pob");
+  pobInput.addEventListener("blur", () => {
+    const v = pobInput.value.trim();
+    if(v !== (p.lieuNaissance||"")) setPlayerInfoField(p.id, "lieuNaissance", v);
+  });
+
+  const emailInput = $("#info-email");
+  emailInput.addEventListener("blur", () => {
+    const v = emailInput.value.trim();
+    if(v !== (p.email||"")) setPlayerInfoField(p.id, "email", v);
+  });
+
+  function phonesFromDom(){
+    return $$("#tel-rows .tel-input").map(inp => inp.value.trim());
+  }
+
+  $$("#tel-rows .tel-input").forEach(inp => {
+    inp.addEventListener("blur", () => setPlayerPhones(p.id, phonesFromDom()));
+  });
+
+  $$("#tel-rows .tel-remove").forEach(btn => btn.addEventListener("click", () => {
+    const idx = parseInt(btn.dataset.idx, 10);
+    const phones = phonesFromDom();
+    phones.splice(idx, 1);
+    setPlayerPhones(p.id, phones);
+    renderPlayerDetail();
+  }));
+
+  $("#info-add-tel").addEventListener("click", () => {
+    const phones = phonesFromDom();
+    phones.push("");
+    setPlayerPhones(p.id, phones);
+    renderPlayerDetail();
+  });
+}
+
+async function setPlayerInfoField(id, field, value){
+  const p = playersById[id];
+  if(!p) return;
+  p[field] = value;
+  if(!db){ toast("Hors ligne — non enregistré"); return; }
+  try{
+    await db.doc("players/"+id).set({[field]: value}, {merge:true});
+    toast("Enregistré");
+  }catch(e){ console.error(e); toast("Erreur"); }
+}
+
+async function setPlayerPhones(id, phones){
+  const p = playersById[id];
+  if(!p) return;
+  const cleaned = phones.filter(t => t !== undefined && t !== null);
+  p.telephones = cleaned;
+  if(!db){ toast("Hors ligne — non enregistré"); return; }
+  try{
+    await db.doc("players/"+id).set({telephones: cleaned}, {merge:true});
+    toast("Enregistré");
   }catch(e){ console.error(e); toast("Erreur"); }
 }
 
