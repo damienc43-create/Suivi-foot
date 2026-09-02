@@ -186,6 +186,25 @@
 
   .empty-state{padding:40px 10px; text-align:center; color:var(--muted); font-size:14px;}
 
+  /* ---- suivi des tests ---- */
+  .suivi-summary{font-size:13px; color:var(--muted); margin:2px 0 12px;}
+  .suivi-row{
+    display:flex; align-items:center; gap:12px;
+    background:var(--surface); border:1px solid var(--line); border-radius:14px;
+    padding:10px 12px; text-align:left; width:100%; margin-bottom:8px;
+  }
+  .suivi-row-main{flex:1; min-width:0;}
+  .suivi-row-name{font-size:15px; font-weight:600; display:flex; align-items:center; gap:6px;}
+  .suivi-row-status{margin-top:4px; display:flex; align-items:center; gap:6px; flex-wrap:wrap;}
+  .suivi-chip{
+    flex:none; border-radius:8px; padding:3px 8px; font-size:11.5px;
+    font-family:"Barlow Condensed"; font-weight:700; letter-spacing:.02em; text-transform:uppercase;
+  }
+  .suivi-chip.done{background:var(--lvl4-soft); color:var(--lvl4);}
+  .suivi-chip.partial{background:var(--lvl2-soft); color:var(--lvl2);}
+  .suivi-chip.todo{background:var(--surface-2); color:var(--muted);}
+  .suivi-missing{font-size:12px; color:var(--muted); line-height:1.35;}
+
   /* ---- fab ---- */
   .fab{
     position:absolute; right:18px; bottom:86px; z-index:6;
@@ -197,7 +216,7 @@
   /* ---- tabbar ---- */
   .tabbar{
     position:sticky; bottom:0; z-index:5;
-    display:grid; grid-template-columns:1fr 1fr;
+    display:grid; grid-template-columns:1fr 1fr 1fr;
     background:var(--surface); border-top:1px solid var(--line);
     padding-bottom:env(safe-area-inset-bottom, 0);
   }
@@ -234,6 +253,13 @@
     width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--surface-2);
     display:flex;align-items:center;justify-content:center;flex:none; margin-top:1px; font-size:18px; font-weight:700; color:var(--muted); line-height:1;
   }
+
+  .nav-btn{
+    width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--surface-2);
+    display:flex;align-items:center;justify-content:center;flex:none; margin-top:1px; color:var(--ink);
+  }
+  .nav-btn svg{width:16px;height:16px;}
+  .nav-btn:disabled{opacity:.3;}
 
   .main-tabs{
     display:grid; grid-template-columns:1fr 1fr; gap:4px;
@@ -293,6 +319,13 @@
   .poste-chip.acquis{background:var(--lvl4-soft); color:var(--lvl4); border-color:transparent;}
   .poste-chip.encours{background:var(--lvl2-soft); color:var(--lvl2); border-color:transparent;}
 
+  .admin-chip{
+    border-radius:999px; padding:3px 9px; font-size:11px; font-family:"Barlow Condensed";
+    font-weight:700; letter-spacing:.02em; border:1px solid var(--line); color:var(--muted); background:var(--surface-2);
+  }
+  .admin-chip.oui{background:var(--lvl4-soft); color:var(--lvl4); border-color:transparent;}
+  .admin-chip.non{background:var(--lvl1-soft); color:var(--lvl1); border-color:transparent;}
+
   .overlay-body{flex:1; overflow-y:auto; padding:14px 16px 32px;}
 
   .period-tabs{
@@ -323,13 +356,22 @@
 
   .crit-card{background:var(--surface); border:1px solid var(--line); border-radius:13px; padding:11px 12px; margin-bottom:8px;}
   .crit-top{display:flex; align-items:center; justify-content:space-between; gap:8px;}
-  .crit-name{font-size:14.5px; font-weight:600;}
+  .crit-name{font-size:14.5px; font-weight:600; flex:1; min-width:0;}
   .info-btn{
     width:22px;height:22px;border-radius:50%; border:1px solid var(--line); background:var(--surface-2);
     color:var(--muted); font-size:12px; font-weight:700; font-family:"Barlow Condensed"; flex:none;
     display:flex;align-items:center;justify-content:center;
   }
   .info-btn.on{background:var(--accent); border-color:var(--accent); color:var(--accent-ink);}
+
+  .absent-btn{
+    flex:none; border:1px solid var(--line); background:var(--surface-2); color:var(--muted);
+    border-radius:8px; padding:4px 9px; font-size:11.5px; font-family:"Barlow Condensed"; font-weight:700;
+    letter-spacing:.02em; text-transform:uppercase;
+  }
+  .absent-btn.on{background:var(--lvl2-soft); border-color:var(--lvl2); color:var(--lvl2);}
+  .crit-card.is-absent{background:var(--surface-2);}
+  .absent-note{margin-top:9px; font-size:12.5px; color:var(--muted); font-style:italic;}
 
   .lvl-row{display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin-top:9px;}
   .lvl-btn{
@@ -500,12 +542,24 @@
       <p class="rule-note" style="margin-top:6px;">Repères indicatifs de calibrage, pas des normes officielles. Les colonnes U12/U13 sont en évidence.</p>
       <div class="age-table-wrap"><table class="age-table" id="age-table"></table></div>
     </section>
+
+    <!-- SUIVI DES TESTS -->
+    <section class="screen" id="view-suivi" hidden>
+      <p class="rule-note">Vue par période : ce qu'il reste à évaluer pour chaque joueur. Un critère non fait peut être marqué <b>Absent</b> depuis la fiche du joueur — il n'entre alors pas dans le calcul de la moyenne.</p>
+      <div class="period-tabs" id="suivi-period-tabs"></div>
+      <div class="suivi-summary" id="suivi-summary"></div>
+      <div id="suivi-list"></div>
+    </section>
   </main>
 
   <div class="tabbar">
     <button class="tab active" data-view="roster">
       <svg viewBox="0 0 24 24" fill="none"><rect x="3.5" y="4.5" width="17" height="4.2" rx="1.2" stroke="currentColor" stroke-width="1.6"/><rect x="3.5" y="10.9" width="17" height="4.2" rx="1.2" stroke="currentColor" stroke-width="1.6"/><rect x="3.5" y="17.3" width="17" height="2.4" rx="1.2" stroke="currentColor" stroke-width="1.6"/></svg>
       <span>Joueurs</span>
+    </button>
+    <button class="tab" data-view="suivi">
+      <svg viewBox="0 0 24 24" fill="none"><rect x="3.5" y="3.5" width="17" height="17" rx="3.5" stroke="currentColor" stroke-width="1.6"/><path d="M8 11.3l2.2 2.2 4.3-4.3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Suivi</span>
     </button>
     <button class="tab" data-view="reperes">
       <svg viewBox="0 0 24 24" fill="none"><path d="M4 5.2c2.8-1.1 5.6-1.1 8 0 2.4-1.1 5.2-1.1 8 0v13.6c-2.8-1.1-5.6-1.1-8 0-2.4-1.1-5.2-1.1-8 0V5.2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M12 5.2v13.6" stroke="currentColor" stroke-width="1.5"/></svg>
@@ -523,10 +577,16 @@
       <button class="back-btn" id="btn-back">
         <svg viewBox="0 0 24 24" fill="none"><path d="M15 5 8 12l7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
+      <button class="nav-btn" id="btn-prev-player" title="Joueur précédent">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M15 5 8 12l7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
       <div class="oh-title">
         <h2 class="display" id="oh-name">—</h2>
         <div class="oh-meta" id="oh-meta"></div>
       </div>
+      <button class="nav-btn" id="btn-next-player" title="Joueur suivant">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
       <button class="kebab-btn" id="btn-kebab">⋮</button>
     </div>
     <div class="overlay-body" id="overlay-body"></div>
@@ -585,6 +645,12 @@ const DATA ={"grille": [{"key": "jonglerie", "categorie": "Technique", "critere"
 const POSTE_LABELS = {gar:"Gardien", defD:"Défenseur droit", defC:"Défenseur central", defG:"Défenseur gauche",
   milG:"Milieu gauche", milCD:"Milieu déf. central", milCO:"Milieu off. central", milD:"Milieu droit", att:"Attaquant"};
 
+const ADMIN_FIELDS = [
+  {key:"licence", label:"Licence"},
+  {key:"paiement", label:"Paiement"},
+  {key:"equipement", label:"Équipement"}
+];
+
 const GROUP_ORDER = ["Technique","Tactique","Physique","Comportement"];
 const GROUPS = GROUP_ORDER.map(cat => ({cat, criteres: DATA.grille.filter(g => g.categorie === cat)}));
 
@@ -637,6 +703,7 @@ let state = {
   playerTab: "profil",
   infoOpen: {},
   detailOpen: {},
+  suiviPeriod: PERIODS[0].key,
   showArchived: false,
   editingPlayerId: null,
   modalPostes: {}
@@ -695,9 +762,19 @@ function toast(msg){
 }
 
 /* ---------------- rendering: roster ---------------- */
-function renderRoster(){
-  const list = $("#roster-list");
+function getFilteredPlayers(){
   const q = state.search.trim().toLowerCase();
+  const allPlayers = Object.values(playersById);
+  let players = allPlayers.filter(p => !!p.archived === state.showArchived)
+    .sort((a,b)=>a.nomComplet.localeCompare(b.nomComplet,'fr'));
+  if(state.catFilter !== "tous") players = players.filter(p => p.categorie === state.catFilter);
+  if(q) players = players.filter(p => p.nomComplet.toLowerCase().includes(q));
+  return players;
+}
+
+function renderRoster(){
+  renderSuivi();
+  const list = $("#roster-list");
   const allPlayers = Object.values(playersById);
   const archivedCount = allPlayers.filter(p => p.archived).length;
 
@@ -712,10 +789,7 @@ function renderRoster(){
     link.hidden = true;
   }
 
-  let players = allPlayers.filter(p => !!p.archived === state.showArchived)
-    .sort((a,b)=>a.nomComplet.localeCompare(b.nomComplet,'fr'));
-  if(state.catFilter !== "tous") players = players.filter(p => p.categorie === state.catFilter);
-  if(q) players = players.filter(p => p.nomComplet.toLowerCase().includes(q));
+  const players = getFilteredPlayers();
 
   if(!players.length){
     list.innerHTML = `<div class="empty-state">${state.showArchived ? "Aucun joueur archivé." : "Aucun joueur ne correspond."}</div>`;
@@ -835,19 +909,45 @@ function buildRadar(playerId){
 }
 
 /* ---------------- rendering: player detail ---------------- */
+function goToAdjacentPlayer(delta){
+  const players = getFilteredPlayers();
+  const idx = players.findIndex(p => p.id === state.currentPlayerId);
+  if(idx === -1) return;
+  const next = players[idx + delta];
+  if(!next) return;
+  state.currentPlayerId = next.id;
+  renderPlayerDetail();
+}
+
+function updateNavButtons(){
+  const players = getFilteredPlayers();
+  const idx = players.findIndex(p => p.id === state.currentPlayerId);
+  $("#btn-prev-player").disabled = idx <= 0;
+  $("#btn-next-player").disabled = idx === -1 || idx >= players.length - 1;
+}
+
 function renderPlayerDetail(){
   const p = playersById[state.currentPlayerId];
   if(!p) return;
   $("#oh-name").textContent = p.nomComplet;
+  updateNavButtons();
 
   const posteEntries = Object.entries(p.postes||{});
   let metaHtml = `<span class="cat-tag">${p.categorie}</span>`;
   if(p.archived) metaHtml += `<span class="archived-tag">Archivé</span>`;
+  ADMIN_FIELDS.forEach(f => {
+    const v = !!p[f.key];
+    metaHtml += `<button class="admin-chip ${v?'oui':'non'}" data-admin="${f.key}">${f.label} : ${v?'Oui':'Non'}</button>`;
+  });
   posteEntries.forEach(([k,v]) => {
     const cls = v === "Acquis" ? "acquis" : (v === "En cours" ? "encours" : "");
     metaHtml += `<span class="poste-chip ${cls}">${POSTE_LABELS[k]||k}</span>`;
   });
   $("#oh-meta").innerHTML = metaHtml;
+  $$("#oh-meta .admin-chip").forEach(btn => btn.addEventListener("click", () => {
+    const field = btn.dataset.admin;
+    setPlayerAdminField(p.id, field, !p[field]);
+  }));
 
   const mainTabsHtml = `<div class="main-tabs">
       <button class="main-tab ${state.playerTab==='profil'?'active':''}" data-tab="profil">Profil</button>
@@ -923,12 +1023,15 @@ function renderPlayerDetail(){
     const groupsHtml = GROUPS.map(g => {
       const rows = g.criteres.map(c => {
         const val = doc.scores ? doc.scores[c.key] : undefined;
+        const isAbsent = !!(doc.absent && doc.absent[c.key]);
         const infoKey = docId+"|"+c.key;
         const infoOpen = !!state.infoOpen[infoKey];
         const rawCfg = NUMERIC_CRITS[c.key];
 
         let inputHtml;
-        if(rawCfg){
+        if(isAbsent){
+          inputHtml = `<div class="absent-note">Joueur absent — critère exclu de la moyenne.</div>`;
+        } else if(rawCfg){
           const raw = doc.raw ? doc.raw[c.key] : undefined;
           const rawStr = (raw===undefined||raw===null) ? "" : raw;
           inputHtml = `<div class="num-row">
@@ -949,9 +1052,10 @@ function renderPlayerDetail(){
               ${[0,1,2,3].map(i => `<div class="${val===i+1?'cur':''}"><b>${i+1}</b><span>${c.niveaux[i]}</span></div>`).join("")}
             </div>`;
         }
-        return `<div class="crit-card">
+        return `<div class="crit-card ${isAbsent?'is-absent':''}">
           <div class="crit-top">
             <div class="crit-name">${c.critere}</div>
+            <button class="absent-btn ${isAbsent?'on':''}" data-absent="${c.key}">${isAbsent?'Absent ✓':'Absent'}</button>
             <button class="info-btn ${infoOpen?'on':''}" data-info="${infoKey}">i</button>
           </div>
           ${inputHtml}
@@ -1040,6 +1144,11 @@ function renderPlayerDetail(){
     state.infoOpen[key] = !state.infoOpen[key];
     renderPlayerDetail();
   }));
+  $$("#overlay-body .absent-btn").forEach(btn => btn.addEventListener("click", () => {
+    const critKey = btn.dataset.absent;
+    const isAbsent = !!(evalCache[docId] && evalCache[docId].absent && evalCache[docId].absent[critKey]);
+    setAbsent(p.id, state.currentPeriod, critKey, !isAbsent);
+  }));
   const commentEl = $("#comment-input");
   const docForComment = evalCache[docId] || {};
   commentEl.addEventListener("blur", () => {
@@ -1061,7 +1170,7 @@ async function ensureEvalDoc(playerId, periodKey){
   const p = playersById[playerId];
   const pd = PERIODS.find(x=>x.key===periodKey);
   const docId = playerId + "__" + periodKey;
-  if(!evalCache[docId]) evalCache[docId] = {playerId, periode: pd.label, scores:{}, raw:{}, commentaire:"", evaluateur:null, updatedAt:null};
+  if(!evalCache[docId]) evalCache[docId] = {playerId, periode: pd.label, scores:{}, raw:{}, absent:{}, commentaire:"", evaluateur:null, updatedAt:null};
   return docId;
 }
 
@@ -1122,6 +1231,44 @@ async function setRawScore(playerId, periodKey, critKey, rawInput){
   }
 }
 
+async function setAbsent(playerId, periodKey, critKey, isAbsent){
+  const docId = await ensureEvalDoc(playerId, periodKey);
+  const local = evalCache[docId];
+  local.absent = {...(local.absent||{})};
+  local.scores = {...(local.scores||{})};
+  local.raw = {...(local.raw||{})};
+
+  if(isAbsent){
+    local.absent[critKey] = true;
+    delete local.scores[critKey];
+    delete local.raw[critKey];
+  } else {
+    delete local.absent[critKey];
+  }
+
+  local.updatedAt = new Date().toISOString();
+  local.evaluateur = evaluateurName();
+  renderPlayerDetail();
+  renderRoster();
+  if(!db){ toast("Hors ligne — non enregistré"); return; }
+  try{
+    const payload = {
+      playerId, periode: PERIODS.find(x=>x.key===periodKey).label,
+      absent: {[critKey]: isAbsent ? true : firebase.firestore.FieldValue.delete()},
+      updatedAt: local.updatedAt, evaluateur: local.evaluateur
+    };
+    if(isAbsent){
+      payload.scores = {[critKey]: firebase.firestore.FieldValue.delete()};
+      payload.raw = {[critKey]: firebase.firestore.FieldValue.delete()};
+    }
+    await db.doc("evaluations/"+docId).set(payload, {merge:true});
+    toast(isAbsent ? "Marqué absent" : "Enregistré");
+  }catch(e){
+    console.error(e);
+    toast("Erreur d'enregistrement");
+  }
+}
+
 async function saveComment(playerId, periodKey, text){
   const docId = await ensureEvalDoc(playerId, periodKey);
   const local = evalCache[docId];
@@ -1145,7 +1292,7 @@ async function addPlayer(nom, prenom, categorie, postes){
   const nomComplet = nom.trim() + " " + prenom.trim();
   let id = slugify(nomComplet);
   if(playersById[id]) id = id + "-" + Math.floor(Math.random()*900+100);
-  const player = {id, nom: nom.trim(), prenom: prenom.trim(), nomComplet, categorie, licence:false, postes: postes||{}, archived:false};
+  const player = {id, nom: nom.trim(), prenom: prenom.trim(), nomComplet, categorie, licence:false, paiement:false, equipement:false, postes: postes||{}, archived:false};
   playersById[id] = player;
   if(!DATA.players.find(p=>p.id===id)) DATA.players.push(player);
   PERIODS.forEach(pd => {
@@ -1193,6 +1340,19 @@ async function archivePlayer(id, archived){
   }catch(e){ console.error(e); toast("Erreur"); }
 }
 
+async function setPlayerAdminField(id, field, value){
+  const p = playersById[id];
+  if(!p) return;
+  p[field] = value;
+  renderRoster();
+  if(state.currentPlayerId === id) renderPlayerDetail();
+  if(!db){ toast("Modifié (hors ligne)"); return; }
+  try{
+    await db.doc("players/"+id).set({[field]: value}, {merge:true});
+    toast("Enregistré");
+  }catch(e){ console.error(e); toast("Erreur"); }
+}
+
 async function deletePlayer(id){
   delete playersById[id];
   DATA.players = DATA.players.filter(p => p.id !== id);
@@ -1211,9 +1371,11 @@ async function deletePlayer(id){
 function setView(view){
   state.view = view;
   $("#view-roster").hidden = view !== "roster";
+  $("#view-suivi").hidden = view !== "suivi";
   $("#view-reperes").hidden = view !== "reperes";
   $$(".tab").forEach(t => t.classList.toggle("active", t.dataset.view === view));
   $("#fab-add").style.display = view === "roster" ? "flex" : "none";
+  if(view === "suivi") renderSuivi();
 }
 
 function openPlayer(id){
@@ -1223,8 +1385,63 @@ function openPlayer(id){
   renderPlayerDetail();
   $("#overlay").classList.add("open");
 }
+function openPlayerForPeriod(id, periodKey){
+  state.currentPlayerId = id;
+  state.currentPeriod = periodKey;
+  state.playerTab = "saisie";
+  renderPlayerDetail();
+  $("#overlay").classList.add("open");
+}
 function closePlayer(){
   $("#overlay").classList.remove("open");
+}
+
+/* ---------------- rendering: suivi des tests ---------------- */
+function renderSuivi(){
+  const tabsHtml = PERIODS.map(pd => `<button class="period-tab ${pd.key===state.suiviPeriod?'active':''}" data-suivi-period="${pd.key}">${pd.label}</button>`).join("");
+  $("#suivi-period-tabs").innerHTML = tabsHtml;
+  $$("#suivi-period-tabs .period-tab").forEach(btn => btn.addEventListener("click", () => {
+    state.suiviPeriod = btn.dataset.suiviPeriod;
+    renderSuivi();
+  }));
+
+  const players = Object.values(playersById).filter(p => !p.archived)
+    .sort((a,b)=>a.nomComplet.localeCompare(b.nomComplet,'fr'));
+  const totalCrit = DATA.grille.length;
+  let completeCount = 0;
+
+  const rows = players.map(p => {
+    const doc = evalCache[p.id+"__"+state.suiviPeriod] || {};
+    const scores = doc.scores || {};
+    const absent = doc.absent || {};
+    const missing = DATA.grille.filter(c => !(c.key in scores) && !absent[c.key]);
+    const doneCount = totalCrit - missing.length;
+    const isComplete = missing.length === 0;
+    if(isComplete) completeCount++;
+
+    let statusHtml;
+    if(isComplete){
+      statusHtml = `<span class="suivi-chip done">Complet</span>`;
+    } else if(doneCount === 0){
+      statusHtml = `<span class="suivi-chip todo">Pas commencé</span>`;
+    } else {
+      const names = missing.map(c => CRIT_SHORT[c.key]).join(", ");
+      statusHtml = `<span class="suivi-chip partial">${doneCount}/${totalCrit}</span><span class="suivi-missing">Manque : ${names}</span>`;
+    }
+
+    return `<button class="suivi-row" data-id="${p.id}">
+      <div class="avatar">${initials(p.nomComplet)}</div>
+      <div class="suivi-row-main">
+        <div class="suivi-row-name">${p.nomComplet}<span class="cat-tag">${p.categorie}</span></div>
+        <div class="suivi-row-status">${statusHtml}</div>
+      </div>
+    </button>`;
+  }).join("");
+
+  const pdLabel = PERIODS.find(pd=>pd.key===state.suiviPeriod).label;
+  $("#suivi-summary").textContent = players.length ? `${completeCount}/${players.length} joueurs entièrement évalués — ${pdLabel}` : "";
+  $("#suivi-list").innerHTML = rows || `<div class="empty-state">Aucun joueur actif.</div>`;
+  $$("#suivi-list .suivi-row").forEach(btn => btn.addEventListener("click", () => openPlayerForPeriod(btn.dataset.id, state.suiviPeriod)));
 }
 
 /* ---------------- player modal (add/edit) ---------------- */
@@ -1357,6 +1574,8 @@ function openLoginSheet(){
 /* ---------------- wiring ---------------- */
 $$(".tab").forEach(t => t.addEventListener("click", () => setView(t.dataset.view)));
 $("#btn-back").addEventListener("click", closePlayer);
+$("#btn-prev-player").addEventListener("click", () => goToAdjacentPlayer(-1));
+$("#btn-next-player").addEventListener("click", () => goToAdjacentPlayer(1));
 $("#search-input").addEventListener("input", e => { state.search = e.target.value; renderRoster(); });
 $$("#cat-filters .chip").forEach(chip => chip.addEventListener("click", () => {
   state.catFilter = chip.dataset.cat;
