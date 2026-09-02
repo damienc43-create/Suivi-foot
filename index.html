@@ -563,10 +563,23 @@
 
     <!-- SUIVI DES TESTS -->
     <section class="screen" id="view-suivi" hidden>
-      <p class="rule-note">Vue par période : ce qu'il reste à évaluer pour chaque joueur. Un critère non fait peut être marqué <b>Absent</b> depuis la fiche du joueur — il n'entre alors pas dans le calcul de la moyenne.</p>
-      <div class="period-tabs" id="suivi-period-tabs"></div>
-      <div class="suivi-summary" id="suivi-summary"></div>
-      <div id="suivi-list"></div>
+      <div class="chiprow" id="suivi-subview">
+        <button class="chip active" data-suivi-view="tests">Tests</button>
+        <button class="chip" data-suivi-view="admin">Rentrée</button>
+      </div>
+
+      <div id="suivi-tests-view">
+        <p class="rule-note">Vue par période : ce qu'il reste à évaluer pour chaque joueur. Un critère non fait peut être marqué <b>Absent</b> depuis la fiche du joueur — il n'entre alors pas dans le calcul de la moyenne.</p>
+        <div class="period-tabs" id="suivi-period-tabs"></div>
+        <div class="suivi-summary" id="suivi-summary"></div>
+        <div id="suivi-list"></div>
+      </div>
+
+      <div id="suivi-admin-view" hidden>
+        <p class="rule-note">Suivi de début de saison : licence, paiement et équipement pour chaque joueur. Bascule le statut directement sur la fiche du joueur (onglet Profil).</p>
+        <div class="suivi-summary" id="suivi-admin-summary"></div>
+        <div id="suivi-admin-list"></div>
+      </div>
     </section>
   </main>
 
@@ -722,6 +735,7 @@ let state = {
   infoOpen: {},
   detailOpen: {},
   suiviPeriod: PERIODS[0].key,
+  suiviView: "tests",
   showArchived: false,
   editingPlayerId: null,
   modalPostes: {}
@@ -1535,6 +1549,53 @@ function closePlayer(){
 
 /* ---------------- rendering: suivi des tests ---------------- */
 function renderSuivi(){
+  $$("#suivi-subview .chip").forEach(c => c.classList.toggle("active", c.dataset.suiviView === state.suiviView));
+  $("#suivi-tests-view").hidden = state.suiviView !== "tests";
+  $("#suivi-admin-view").hidden = state.suiviView !== "admin";
+  if(state.suiviView === "admin"){ renderSuiviAdmin(); return; }
+  renderSuiviTests();
+}
+
+function renderSuiviAdmin(){
+  const players = Object.values(playersById).filter(p => !p.archived)
+    .sort((a,b)=>a.nomComplet.localeCompare(b.nomComplet,'fr'));
+
+  let allOk = 0;
+  const perField = {};
+  ADMIN_FIELDS.forEach(f => perField[f.key] = 0);
+
+  const rows = players.map(p => {
+    const missing = ADMIN_FIELDS.filter(f => !p[f.key]);
+    if(!missing.length) allOk++;
+    ADMIN_FIELDS.forEach(f => { if(p[f.key]) perField[f.key]++; });
+
+    let statusHtml;
+    if(!missing.length){
+      statusHtml = `<span class="suivi-chip done">Complet</span>`;
+    } else {
+      const doneCount = ADMIN_FIELDS.length - missing.length;
+      const names = missing.map(f => f.label).join(", ");
+      statusHtml = `<span class="suivi-chip partial">${doneCount}/${ADMIN_FIELDS.length}</span><span class="suivi-missing">Manque : ${names}</span>`;
+    }
+
+    return `<button class="suivi-row" data-id="${p.id}">
+      <div class="avatar">${initials(p.nomComplet)}</div>
+      <div class="suivi-row-main">
+        <div class="suivi-row-name">${p.nomComplet}<span class="cat-tag">${p.categorie}</span></div>
+        <div class="suivi-row-status">${statusHtml}</div>
+      </div>
+    </button>`;
+  }).join("");
+
+  const fieldSummary = ADMIN_FIELDS.map(f => `${f.label} ${perField[f.key]}/${players.length}`).join(" · ");
+  $("#suivi-admin-summary").textContent = players.length
+    ? `${allOk}/${players.length} joueurs en règle — ${fieldSummary}`
+    : "";
+  $("#suivi-admin-list").innerHTML = rows || `<div class="empty-state">Aucun joueur actif.</div>`;
+  $$("#suivi-admin-list .suivi-row").forEach(btn => btn.addEventListener("click", () => openPlayer(btn.dataset.id)));
+}
+
+function renderSuiviTests(){
   const tabsHtml = PERIODS.map(pd => `<button class="period-tab ${pd.key===state.suiviPeriod?'active':''}" data-suivi-period="${pd.key}">${pd.label}</button>`).join("");
   $("#suivi-period-tabs").innerHTML = tabsHtml;
   $$("#suivi-period-tabs .period-tab").forEach(btn => btn.addEventListener("click", () => {
@@ -1710,6 +1771,10 @@ function openLoginSheet(){
 
 /* ---------------- wiring ---------------- */
 $$(".tab").forEach(t => t.addEventListener("click", () => setView(t.dataset.view)));
+$$("#suivi-subview .chip").forEach(chip => chip.addEventListener("click", () => {
+  state.suiviView = chip.dataset.suiviView;
+  renderSuivi();
+}));
 $("#btn-back").addEventListener("click", closePlayer);
 $("#btn-prev-player").addEventListener("click", () => goToAdjacentPlayer(-1));
 $("#btn-next-player").addEventListener("click", () => goToAdjacentPlayer(1));
