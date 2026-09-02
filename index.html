@@ -255,10 +255,10 @@
   }
 
   .nav-btn{
-    width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--surface-2);
-    display:flex;align-items:center;justify-content:center;flex:none; margin-top:1px; color:var(--ink);
+    width:34px;height:34px;border-radius:50%;border:1px solid transparent;background:var(--accent-soft);
+    display:flex;align-items:center;justify-content:center;flex:none; margin-top:1px; color:var(--accent);
   }
-  .nav-btn svg{width:16px;height:16px;}
+  .nav-btn svg{width:18px;height:18px;}
   .nav-btn:disabled{opacity:.3;}
 
   .main-tabs{
@@ -435,6 +435,12 @@
 
   .info-card{background:var(--surface); border:1px solid var(--line); border-radius:13px; padding:14px; margin-bottom:12px;}
   .info-card label{font-size:12.5px; font-weight:600; color:var(--muted);}
+  .dob-row{display:flex; gap:8px;}
+  .dob-input{
+    flex:1; min-width:0; border:1px solid var(--line); background:var(--surface-2); border-radius:10px;
+    padding:9px 4px; font-size:14.5px; outline:none; text-align:center;
+  }
+  .dob-input.dob-year{flex:1.5;}
   .tel-row{display:flex; align-items:center; gap:8px; margin-bottom:8px;}
   .tel-input{
     flex:1; border:1px solid var(--line); background:var(--surface-2); border-radius:10px;
@@ -590,14 +596,14 @@
         <svg viewBox="0 0 24 24" fill="none"><path d="M15 5 8 12l7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
       <button class="nav-btn" id="btn-prev-player" title="Joueur précédent">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M15 5 8 12l7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg viewBox="0 0 24 24" fill="none"><path d="M18 5l-7 7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M11 5 4 12l7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
       <div class="oh-title">
         <h2 class="display" id="oh-name">—</h2>
         <div class="oh-meta" id="oh-meta"></div>
       </div>
       <button class="nav-btn" id="btn-next-player" title="Joueur suivant">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg viewBox="0 0 24 24" fill="none"><path d="M6 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M13 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
       <button class="kebab-btn" id="btn-kebab">⋮</button>
     </div>
@@ -1370,9 +1376,22 @@ function renderInfoTabBody(p){
       <button class="tel-remove" type="button" data-idx="${i}" title="Supprimer ce numéro">✕</button>
     </div>`).join("");
 
+  let dobD = "", dobM = "", dobY = "";
+  if(p.dateNaissance && /^\d{4}-\d{2}-\d{2}$/.test(p.dateNaissance)){
+    const [y,m,d] = p.dateNaissance.split("-");
+    dobY = y; dobM = String(parseInt(m,10)); dobD = String(parseInt(d,10));
+  }
+
   return `
     <div class="info-card">
-      <div class="field"><label>Date de naissance</label><input type="date" id="info-dob" value="${p.dateNaissance||""}"></div>
+      <div class="field">
+        <label>Date de naissance</label>
+        <div class="dob-row">
+          <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" class="dob-input" id="info-dob-d" placeholder="JJ" value="${dobD}">
+          <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" class="dob-input" id="info-dob-m" placeholder="MM" value="${dobM}">
+          <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" class="dob-input dob-year" id="info-dob-y" placeholder="AAAA" value="${dobY}">
+        </div>
+      </div>
       <div class="field"><label>Lieu de naissance</label><input type="text" id="info-pob" placeholder="ex. Clermont-Ferrand" value="${p.lieuNaissance||""}"></div>
       <div class="field" style="margin-bottom:0;"><label>Email</label><input type="email" id="info-email" placeholder="ex. parent@mail.com" value="${p.email||""}"></div>
     </div>
@@ -1385,8 +1404,19 @@ function renderInfoTabBody(p){
 }
 
 function wireInfoTab(p){
-  const dobInput = $("#info-dob");
-  dobInput.addEventListener("change", () => setPlayerInfoField(p.id, "dateNaissance", dobInput.value));
+  const dobD = $("#info-dob-d"), dobM = $("#info-dob-m"), dobY = $("#info-dob-y");
+  function saveDob(){
+    const dRaw = dobD.value.trim(), mRaw = dobM.value.trim(), yRaw = dobY.value.trim();
+    if(!dRaw && !mRaw && !yRaw){
+      if(p.dateNaissance) setPlayerInfoField(p.id, "dateNaissance", "");
+      return;
+    }
+    const d = parseInt(dRaw,10), m = parseInt(mRaw,10), y = parseInt(yRaw,10);
+    if(!d || !m || !y || d<1 || d>31 || m<1 || m>12 || yRaw.length<4) return; // saisie incomplète, on attend
+    const iso = `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    if(iso !== p.dateNaissance) setPlayerInfoField(p.id, "dateNaissance", iso);
+  }
+  [dobD, dobM, dobY].forEach(inp => inp.addEventListener("blur", saveDob));
 
   const pobInput = $("#info-pob");
   pobInput.addEventListener("blur", () => {
