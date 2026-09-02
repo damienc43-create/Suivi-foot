@@ -131,6 +131,8 @@
     display:flex;align-items:center;justify-content:center;flex:none;
   }
   .icon-btn svg{width:17px;height:17px;}
+  .icon-btn.logged-in{background:var(--accent); border-color:var(--accent);}
+  .account-initial{font-family:"Barlow Condensed"; font-weight:700; font-size:16px; color:var(--accent-ink);}
 
   main{flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch;}
   .screen{padding:14px 18px 28px;}
@@ -1046,6 +1048,7 @@ function renderPlayerDetail(){
   const evalInput = $("#evaluateur-input");
   evalInput.addEventListener("change", () => {
     localStorage.setItem("foot_evaluateur_name", evalInput.value.trim());
+    updateAccountBtn();
   });
 }
 
@@ -1294,6 +1297,63 @@ function openActionsSheet(){
   });
 }
 
+function updateAccountBtn(){
+  const btn = $("#btn-settings");
+  const name = evaluateurName();
+  if(name){
+    btn.classList.add("logged-in");
+    btn.title = "Connecté : "+name+" (toucher pour changer)";
+    btn.innerHTML = `<span class="account-initial">${name.trim().charAt(0).toUpperCase()}</span>`;
+  } else {
+    btn.classList.remove("logged-in");
+    btn.title = "Se connecter";
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.4" stroke="currentColor" stroke-width="1.6"/><path d="M4.5 20c1.4-3.6 4.3-5.4 7.5-5.4s6.1 1.8 7.5 5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>`;
+  }
+}
+
+function openLoginSheet(){
+  const sheet = $("#actions-sheet");
+  const current = evaluateurName();
+  sheet.innerHTML = `
+    <h3>${current ? "Changer d'évaluateur" : "Se connecter"}</h3>
+    <div style="padding:2px 2px 12px; font-size:13px; color:var(--muted); line-height:1.4;">
+      ${current
+        ? `Connecté comme <b style="color:var(--ink);">${current}</b> sur cet appareil.`
+        : `Indique ton prénom : il sera enregistré automatiquement sur toutes tes évaluations, sur cet appareil.`}
+    </div>
+    <div class="field"><label>Prénom</label><input id="login-input" type="text" placeholder="ex. Damien" value="${current||''}" autocomplete="off"></div>
+    <div class="modal-actions" style="margin-top:10px;">
+      ${current ? `<button class="btn" id="login-logout">Se déconnecter</button>` : `<button class="btn" id="login-cancel">Annuler</button>`}
+      <button class="btn primary" id="login-save">${current ? "Mettre à jour" : "Se connecter"}</button>
+    </div>
+  `;
+  $("#actions-backdrop").classList.add("show");
+  const input = $("#login-input");
+  setTimeout(() => input.focus(), 50);
+
+  const cancelBtn = $("#login-cancel");
+  if(cancelBtn) cancelBtn.addEventListener("click", () => $("#actions-backdrop").classList.remove("show"));
+
+  const logoutBtn = $("#login-logout");
+  if(logoutBtn) logoutBtn.addEventListener("click", () => {
+    localStorage.removeItem("foot_evaluateur_name");
+    $("#actions-backdrop").classList.remove("show");
+    updateAccountBtn();
+    toast("Déconnecté");
+  });
+
+  function doSave(){
+    const val = input.value.trim();
+    if(!val){ toast("Entre ton prénom"); return; }
+    localStorage.setItem("foot_evaluateur_name", val);
+    $("#actions-backdrop").classList.remove("show");
+    updateAccountBtn();
+    toast("Connecté comme "+val);
+  }
+  $("#login-save").addEventListener("click", doSave);
+  input.addEventListener("keydown", e => { if(e.key === "Enter") doSave(); });
+}
+
 /* ---------------- wiring ---------------- */
 $$(".tab").forEach(t => t.addEventListener("click", () => setView(t.dataset.view)));
 $("#btn-back").addEventListener("click", closePlayer);
@@ -1304,9 +1364,8 @@ $$("#cat-filters .chip").forEach(chip => chip.addEventListener("click", () => {
   renderRoster();
 }));
 
-$("#btn-settings").addEventListener("click", () => {
-  toast("Réglez votre nom d'évaluateur dans une fiche joueur");
-});
+$("#btn-settings").addEventListener("click", openLoginSheet);
+updateAccountBtn();
 
 $("#fab-add").addEventListener("click", () => openPlayerModal(null));
 $("#np-cancel").addEventListener("click", () => $("#modal-backdrop").classList.remove("show"));
